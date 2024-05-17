@@ -12,6 +12,9 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
+const database_module_1 = require("./database/database.module");
+const payable_module_1 = require("./payable/payable.module");
+const assignor_module_1 = require("./assignor/assignor.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -21,6 +24,9 @@ exports.AppModule = AppModule = __decorate([
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '../..', 'client', 'dist'),
             }),
+            database_module_1.DatabaseModule,
+            payable_module_1.PayableModule,
+            assignor_module_1.AssignorModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
