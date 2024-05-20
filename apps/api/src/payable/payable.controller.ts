@@ -10,7 +10,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { PayableService } from './payable.service';
-import { Prisma } from '@prisma/client';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
 
@@ -31,11 +30,12 @@ export class PayableController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.payableService.findOne(id);
+  findById(@Param('id') id: string) {
+    return this.payableService.findById(id);
   }
 
   @Patch(':id')
+  @UsePipes(new ValidationPipe())
   update(@Param('id') id: string, @Body() updatePayableDto: UpdatePayableDTO) {
     return this.payableService.update(id, updatePayableDto);
   }

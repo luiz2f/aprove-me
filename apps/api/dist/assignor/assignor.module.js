@@ -10,6 +10,7 @@ exports.AssignorModule = void 0;
 const common_1 = require("@nestjs/common");
 const assignor_service_1 = require("./assignor.service");
 const assignor_controller_1 = require("./assignor.controller");
+const database_module_1 = require("../database/database.module");
 let AssignorModule = class AssignorModule {
 };
 exports.AssignorModule = AssignorModule;
@@ -17,6 +18,7 @@ exports.AssignorModule = AssignorModule = __decorate([
     (0, common_1.Module)({
         controllers: [assignor_controller_1.AssignorController],
         providers: [assignor_service_1.AssignorService],
+        imports: [database_module_1.DatabaseModule],
     })
 ], AssignorModule);
 //# sourceMappingURL=assignor.module.js.map

@@ -18,59 +18,58 @@ let PayableService = class PayableService {
         this.databaseService = databaseService;
     }
     async create(createPayableDto) {
-        return this.databaseService.payable.create({ data: createPayableDto });
+        const existingAssignor = await this.databaseService.assignor.findUnique({
+            where: { id: createPayableDto.assignorId },
+        });
+        if (!existingAssignor) {
+            throw new common_1.BadRequestException(`Assignor with ID ${createPayableDto.assignorId} does not exist`);
+        }
+        return await this.databaseService.payable.create({
+            data: createPayableDto,
+        });
     }
     async findAll() {
-        return this.databaseService.payable.findMany({});
+        return await this.databaseService.payable.findMany({});
     }
-    async findOne(id) {
+    async findById(id) {
+        if (!(0, class_validator_1.isUUID)(id, 4)) {
+            throw new common_1.BadRequestException(`Invalid ID format: ${id}`);
+        }
         const payable = await this.databaseService.payable.findUnique({
             where: { id },
         });
         if (!payable) {
-            return `Playable with ID ${id} not found`;
+            throw new common_1.BadRequestException(`Payable with ID ${id} not found`);
         }
         return payable;
     }
     async update(id, updatePayableDto) {
-        const existingPayable = await this.databaseService.payable.findUnique({
-            where: { id },
-        });
-        if (!existingPayable) {
-            throw new common_1.BadRequestException(`Payable with ID ${id} not found`);
-        }
+        await this.findById(id);
         const errors = await (0, class_validator_1.validate)(updatePayableDto);
         if (errors.length > 0) {
             throw new common_1.BadRequestException(errors.toString());
         }
-        const dataToUpdate = {};
-        if (updatePayableDto.value !== undefined)
-            dataToUpdate.value = updatePayableDto.value;
-        if (updatePayableDto.emissionDate !== undefined)
-            dataToUpdate.emissionDate = updatePayableDto.emissionDate;
-        if (updatePayableDto.assignorId !== undefined)
-            dataToUpdate.assignorId = updatePayableDto.assignorId;
         const forbiddenAttributes = ['id', 'createdAt', 'updatedAt'];
         const invalidAttributes = Object.keys(updatePayableDto).filter((attr) => forbiddenAttributes.includes(attr));
         if (invalidAttributes.length > 0) {
             throw new common_1.BadRequestException(`You can't change these attributes: ${invalidAttributes.join(', ')}`);
         }
-        return this.databaseService.payable.update({
-            where: { id },
-            data: dataToUpdate,
-        });
+        try {
+            return await this.databaseService.payable.update({
+                where: { id },
+                data: updatePayableDto,
+            });
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
     }
     async remove(id) {
-        const payableToDelete = await this.databaseService.payable.findUnique({
-            where: { id },
-        });
-        if (!payableToDelete) {
-            throw new common_1.BadRequestException(`Playable with ID ${id} not found`);
-        }
+        await this.findById(id);
         await this.databaseService.payable.delete({
             where: { id },
         });
-        throw new common_1.BadRequestException(`Playable with ID ${id} deleted`);
+        return { message: `Payable with ID ${id} has been deleted successfully` };
     }
 };
 exports.PayableService = PayableService;

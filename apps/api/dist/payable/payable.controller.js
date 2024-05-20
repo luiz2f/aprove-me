@@ -28,8 +28,8 @@ let PayableController = class PayableController {
     findAll() {
         return this.payableService.findAll();
     }
-    findOne(id) {
-        return this.payableService.findOne(id);
+    findById(id) {
+        return this.payableService.findById(id);
     }
     update(id, updatePayableDto) {
         return this.payableService.update(id, updatePayableDto);
@@ -59,9 +59,10 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], PayableController.prototype, "findOne", null);
+], PayableController.prototype, "findById", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),

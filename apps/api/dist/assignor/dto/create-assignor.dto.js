@@ -15,26 +15,26 @@ class CreateAssignorDto {
 }
 exports.CreateAssignorDto = CreateAssignorDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.MaxLength)(30),
+    (0, class_validator_1.IsString)({ message: 'Document must be a string' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Document is required' }),
+    (0, class_validator_1.MaxLength)(30, { message: 'Document max lenght is 30' }),
     __metadata("design:type", String)
 ], CreateAssignorDto.prototype, "document", void 0);
 __decorate([
+    (0, class_validator_1.MaxLength)(140, { message: 'Email max lenght is 140' }),
     (0, class_validator_1.IsEmail)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.MaxLength)(140),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Email is required' }),
     __metadata("design:type", String)
 ], CreateAssignorDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MaxLength)(20),
+    (0, class_validator_1.MaxLength)(20, { message: 'Phone max lenght is 20' }),
+    (0, class_validator_1.IsString)({ message: 'Phone must be a string' }),
     __metadata("design:type", String)
 ], CreateAssignorDto.prototype, "phone", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.MaxLength)(140),
+    (0, class_validator_1.MaxLength)(140, { message: 'Name max lenght is 140' }),
+    (0, class_validator_1.IsString)({ message: 'Name must be a string' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Name is required' }),
     __metadata("design:type", String)
 ], CreateAssignorDto.prototype, "name", void 0);
 //# sourceMappingURL=create-assignor.dto.js.map

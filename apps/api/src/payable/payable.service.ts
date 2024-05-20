@@ -1,58 +1,57 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { Prisma } from '@prisma/client';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
-import { validate } from 'class-validator';
+import { isUUID, validate } from 'class-validator';
 
 @Injectable()
 export class PayableService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createPayableDto: CreatePayableDto) {
-    return this.databaseService.payable.create({ data: createPayableDto });
+    // Maybe check for duplicated value and emission date
+    const existingAssignor = await this.databaseService.assignor.findUnique({
+      where: { id: createPayableDto.assignorId },
+    });
+    if (!existingAssignor) {
+      throw new BadRequestException(
+        `Assignor with ID ${createPayableDto.assignorId} does not exist`,
+      );
+    }
+
+    return await this.databaseService.payable.create({
+      data: createPayableDto,
+    });
   }
 
   async findAll() {
-    return this.databaseService.payable.findMany({});
+    return await this.databaseService.payable.findMany({});
   }
 
-  async findOne(id: string) {
+  async findById(id: string) {
+    if (!isUUID(id, 4)) {
+      throw new BadRequestException(`Invalid ID format: ${id}`);
+    }
+
     const payable = await this.databaseService.payable.findUnique({
       where: { id },
     });
 
     if (!payable) {
-      return `Playable with ID ${id} not found`;
+      throw new BadRequestException(`Payable with ID ${id} not found`);
     }
 
     return payable;
   }
   async update(id: string, updatePayableDto: UpdatePayableDTO) {
-    // Verifica se o payable com o ID fornecido existe
-    const existingPayable = await this.databaseService.payable.findUnique({
-      where: { id },
-    });
-
-    if (!existingPayable) {
-      throw new BadRequestException(`Payable with ID ${id} not found`);
-    }
+    //check UUID and if exists
+    await this.findById(id);
 
     // Aplica as validações no DTO
     const errors = await validate(updatePayableDto);
-
     if (errors.length > 0) {
       throw new BadRequestException(errors.toString());
     }
-
-    // Atualiza apenas os campos fornecidos
-    const dataToUpdate: Partial<UpdatePayableDTO> = {};
-    if (updatePayableDto.value !== undefined)
-      dataToUpdate.value = updatePayableDto.value;
-    if (updatePayableDto.emissionDate !== undefined)
-      dataToUpdate.emissionDate = updatePayableDto.emissionDate;
-    if (updatePayableDto.assignorId !== undefined)
-      dataToUpdate.assignorId = updatePayableDto.assignorId;
 
     // Removemos a atribuição do id, garantindo que ele não seja atualizado
     // dataToUpdate.id = id; // Remove this line
@@ -65,26 +64,27 @@ export class PayableService {
         `You can't change these attributes: ${invalidAttributes.join(', ')}`,
       );
     }
-    // Executa a atualização no banco de dados
-    return this.databaseService.payable.update({
-      where: { id },
-      data: dataToUpdate,
-    });
+
+    try {
+      // Executa a atualização no banco de dados
+      return await this.databaseService.payable.update({
+        where: { id },
+        data: updatePayableDto,
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async remove(id: string) {
-    const payableToDelete = await this.databaseService.payable.findUnique({
-      where: { id },
-    });
+    //check UUID and if exists
 
-    if (!payableToDelete) {
-      throw new BadRequestException(`Playable with ID ${id} not found`);
-    }
+    await this.findById(id);
 
     await this.databaseService.payable.delete({
       where: { id },
     });
 
-    throw new BadRequestException(`Playable with ID ${id} deleted`);
+    return { message: `Payable with ID ${id} has been deleted successfully` };
   }
 }

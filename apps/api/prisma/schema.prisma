@@ -28,7 +28,7 @@ model Assignor {
   id       String @id @default(uuid()) 
   document String @unique
   email    String @unique
-  phone    String
+  phone    String 
   name     String
   payables  Payable[]
   createdAt DateTime  @default(now())

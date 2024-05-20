@@ -20,7 +20,7 @@ export declare class PayableService {
         createdAt: Date;
         updatedAt: Date;
     }[]>;
-    findOne(id: string): Promise<string | {
+    findById(id: string): Promise<{
         id: string;
         value: number;
         emissionDate: Date;
@@ -36,5 +36,7 @@ export declare class PayableService {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    remove(id: string): Promise<void>;
+    remove(id: string): Promise<{
+        message: string;
+    }>;
 }

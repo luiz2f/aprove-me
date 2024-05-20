@@ -1,0 +1,28 @@
+
+> api@0.0.1 test
+> jest assignor.service.spec.ts
+
+  console.log
+    {}
+
+      at Object.<anonymous> (assignor/tests/assignor.service.spec.ts:72:15)
+
+  console.log
+    {}
+
+      at Object.<anonymous> (assignor/tests/assignor.service.spec.ts:85:15)
+
+PASS src/assignor/tests/assignor.service.spec.ts
+  Assignor test unit
+    √ should be defined (13 ms)
+    get all assignors
+      √ should return a list of assignors successfully (3 ms)
+    create new assignor
+      √ should create an assignor (18 ms)
+      √ should not be able to create an assignor using a invalid document (3 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        3.144 s, estimated 4 s
+Ran all test suites matching /assignor.service.spec.ts/i.

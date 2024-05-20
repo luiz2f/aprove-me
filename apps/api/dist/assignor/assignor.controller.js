@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssignorController = void 0;
 const common_1 = require("@nestjs/common");
 const assignor_service_1 = require("./assignor.service");
-const client_1 = require("@prisma/client");
 const create_assignor_dto_1 = require("./dto/create-assignor.dto");
+const update_assignor_dto_1 = require("./dto/update-assignor.dto");
 let AssignorController = class AssignorController {
     constructor(assignorService) {
         this.assignorService = assignorService;
@@ -27,8 +27,8 @@ let AssignorController = class AssignorController {
     findAll() {
         return this.assignorService.findAll();
     }
-    findOne(id) {
-        return this.assignorService.findOne(id);
+    findById(id) {
+        return this.assignorService.findById(id);
     }
     update(id, updateAssignorDto) {
         return this.assignorService.update(id, updateAssignorDto);
@@ -40,6 +40,7 @@ let AssignorController = class AssignorController {
 exports.AssignorController = AssignorController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_assignor_dto_1.CreateAssignorDto]),
@@ -57,13 +58,14 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], AssignorController.prototype, "findOne", null);
+], AssignorController.prototype, "findById", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, update_assignor_dto_1.UpdateAssignorDto]),
     __metadata("design:returntype", void 0)
 ], AssignorController.prototype, "update", null);
 __decorate([
@@ -74,7 +76,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AssignorController.prototype, "remove", null);
 exports.AssignorController = AssignorController = __decorate([
-    (0, common_1.Controller)('assignor'),
+    (0, common_1.Controller)('integrations/assignor'),
     __metadata("design:paramtypes", [assignor_service_1.AssignorService])
 ], AssignorController);
 //# sourceMappingURL=assignor.controller.js.map

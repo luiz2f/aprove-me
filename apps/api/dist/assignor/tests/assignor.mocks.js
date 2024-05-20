@@ -1,0 +1,1 @@
+//# sourceMappingURL=assignor.mocks.js.map

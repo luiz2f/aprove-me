@@ -1,17 +1,10 @@
-import { DatabaseService } from 'src/database/database.service';
-import { Prisma } from '@prisma/client';
+import { CreateAssignorDto } from './dto/create-assignor.dto';
+import { UpdateAssignorDto } from './dto/update-assignor.dto';
+import { DatabaseService } from '../database/database.service';
 export declare class AssignorService {
     private readonly databaseService;
     constructor(databaseService: DatabaseService);
-    create(createAssignorDto: Prisma.AssignorCreateInput): Promise<{
-        id: string;
-        document: string;
-        email: string;
-        phone: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
+    create(createAssignorDto: CreateAssignorDto): Promise<CreateAssignorDto>;
     findAll(): Promise<{
         id: string;
         document: string;
@@ -21,7 +14,7 @@ export declare class AssignorService {
         createdAt: Date;
         updatedAt: Date;
     }[]>;
-    findOne(id: string): Promise<{
+    findById(id: string): Promise<{
         id: string;
         document: string;
         email: string;
@@ -30,7 +23,7 @@ export declare class AssignorService {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    update(id: string, updateAssignorDto: Prisma.AssignorUpdateInput): Promise<{
+    update(id: string, updateAssignorDto: UpdateAssignorDto): Promise<{
         id: string;
         document: string;
         email: string;
@@ -40,12 +33,6 @@ export declare class AssignorService {
         updatedAt: Date;
     }>;
     remove(id: string): Promise<{
-        id: string;
-        document: string;
-        email: string;
-        phone: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
+        message: string;
     }>;
 }
