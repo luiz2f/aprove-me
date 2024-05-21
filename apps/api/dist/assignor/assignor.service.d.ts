@@ -1,19 +1,17 @@
+import { Assignor } from '@prisma/client';
+import { AssignorRepository } from './assignor.repository';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
-import { DatabaseService } from '../database/database.service';
-import { Assignor } from '@prisma/client';
+type errorType = {
+    message: string;
+};
 export declare class AssignorService {
-    private readonly databaseService;
-    constructor(databaseService: DatabaseService);
-    create({ document, email, name, phone, }: CreateAssignorDto): Promise<Assignor | {
-        message: string;
-    }>;
+    private readonly assignorRepository;
+    constructor(assignorRepository: AssignorRepository);
+    create(data: CreateAssignorDto): Promise<Assignor | errorType>;
     findAll(): Promise<Assignor[]>;
-    findById(id: string): Promise<Assignor | {
-        message: string;
-    }>;
-    update(id: string, data: UpdateAssignorDto): Promise<Assignor>;
-    remove(id: string): Promise<Assignor | {
-        message: string;
-    }>;
+    findById(id: string): Promise<Assignor | errorType>;
+    update(id: string, data: UpdateAssignorDto): Promise<Assignor | errorType>;
+    remove(id: string): Promise<Assignor | errorType>;
 }
+export {};

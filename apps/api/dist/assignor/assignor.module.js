@@ -11,13 +11,15 @@ const common_1 = require("@nestjs/common");
 const assignor_service_1 = require("./assignor.service");
 const assignor_controller_1 = require("./assignor.controller");
 const database_module_1 = require("../database/database.module");
+const assignor_repository_1 = require("./assignor.repository");
+const database_service_1 = require("../database/database.service");
 let AssignorModule = class AssignorModule {
 };
 exports.AssignorModule = AssignorModule;
 exports.AssignorModule = AssignorModule = __decorate([
     (0, common_1.Module)({
         controllers: [assignor_controller_1.AssignorController],
-        providers: [assignor_service_1.AssignorService],
+        providers: [assignor_service_1.AssignorService, assignor_repository_1.AssignorRepository, database_service_1.DatabaseService],
         imports: [database_module_1.DatabaseModule],
     })
 ], AssignorModule);

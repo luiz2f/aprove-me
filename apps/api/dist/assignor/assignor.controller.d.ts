@@ -43,6 +43,8 @@ export declare class AssignorController {
         name: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     remove(id: string): Promise<{
         id: string;

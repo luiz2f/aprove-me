@@ -10,13 +10,15 @@ exports.PayableModule = void 0;
 const common_1 = require("@nestjs/common");
 const payable_service_1 = require("./payable.service");
 const payable_controller_1 = require("./payable.controller");
+const payable_repository_1 = require("./payable.repository");
+const database_service_1 = require("../database/database.service");
 let PayableModule = class PayableModule {
 };
 exports.PayableModule = PayableModule;
 exports.PayableModule = PayableModule = __decorate([
     (0, common_1.Module)({
         controllers: [payable_controller_1.PayableController],
-        providers: [payable_service_1.PayableService],
+        providers: [payable_service_1.PayableService, payable_repository_1.PayableRepository, database_service_1.DatabaseService],
     })
 ], PayableModule);
 //# sourceMappingURL=payable.module.js.map

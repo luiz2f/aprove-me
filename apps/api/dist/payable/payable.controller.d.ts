@@ -11,6 +11,8 @@ export declare class PayableController {
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     findAll(): Promise<{
         id: string;
@@ -27,6 +29,8 @@ export declare class PayableController {
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     update(id: string, updatePayableDto: UpdatePayableDTO): Promise<{
         id: string;
@@ -35,8 +39,17 @@ export declare class PayableController {
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     remove(id: string): Promise<{
+        id: string;
+        value: number;
+        emissionDate: Date;
+        assignorId: string;
+        createdAt: Date;
+        updatedAt: Date;
+    } | {
         message: string;
     }>;
 }

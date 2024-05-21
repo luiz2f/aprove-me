@@ -6,6 +6,7 @@ import { join } from 'path';
 import { DatabaseModule } from './database/database.module';
 import { PayableModule } from './payable/payable.module';
 import { AssignorModule } from './assignor/assignor.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AssignorModule } from './assignor/assignor.module';
     DatabaseModule,
     PayableModule,
     AssignorModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

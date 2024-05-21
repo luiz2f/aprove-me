@@ -10,5 +10,8 @@
   },
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "dependencies": {
+    "passport-jwt": "^4.0.1"
+  }
 }

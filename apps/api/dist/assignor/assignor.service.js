@@ -11,112 +11,48 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssignorService = void 0;
 const common_1 = require("@nestjs/common");
-const cpf_cnpj_validator_1 = require("cpf-cnpj-validator");
-const class_validator_1 = require("class-validator");
-const database_service_1 = require("../database/database.service");
+const assignor_repository_1 = require("./assignor.repository");
 let AssignorService = class AssignorService {
-    constructor(databaseService) {
-        this.databaseService = databaseService;
+    constructor(assignorRepository) {
+        this.assignorRepository = assignorRepository;
     }
-    async create({ document, email, name, phone, }) {
-        const errors = [];
-        if (!cpf_cnpj_validator_1.cpf.isValid(document) && !cpf_cnpj_validator_1.cnpj.isValid(document)) {
-            throw new common_1.BadRequestException(`${document} is not a valid document`);
-        }
-        const emailAlreadyExist = await this.databaseService.assignor.findUnique({
-            where: { email },
-        });
-        const documentAlreadyExist = await this.databaseService.assignor.findUnique({
-            where: { document },
-        });
-        if (emailAlreadyExist) {
-            errors.push('Email is already in use');
-        }
-        if (documentAlreadyExist) {
-            errors.push('Document is already in use');
-        }
-        if (Object.keys(errors).length > 0) {
-            throw new common_1.BadRequestException(errors);
-        }
+    async create(data) {
         try {
-            const assignor = await this.databaseService.assignor.create({
-                data: {
-                    document,
-                    email,
-                    name,
-                    phone,
-                },
-            });
-            return assignor;
+            const newAssignor = await this.assignorRepository.create(data);
+            return newAssignor;
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
         }
     }
     async findAll() {
-        const assignors = await this.databaseService.assignor.findMany();
-        return assignors;
+        return await this.assignorRepository.findAll();
     }
     async findById(id) {
-        if (!(0, class_validator_1.isUUID)(id, 4)) {
-            throw new common_1.BadRequestException(`Invalid ID format: ${id}`);
+        try {
+            const payable = await this.assignorRepository.findById(id);
+            return payable;
         }
-        const assignor = await this.databaseService.assignor.findUnique({
-            where: { id },
-        });
-        if (!assignor) {
-            throw new common_1.BadRequestException(`Assignor with ID ${id} not found`);
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
         }
-        return assignor;
     }
     async update(id, data) {
-        await this.findById(id);
-        const errors = [];
-        const { document, email, phone, name } = data;
-        if (document) {
-            if (!cpf_cnpj_validator_1.cpf.isValid(document) && !cpf_cnpj_validator_1.cnpj.isValid(document)) {
-                throw new common_1.BadRequestException(`${document} is not a valid document`);
-            }
-            const documentAlreadyExist = await this.databaseService.assignor.findUnique({
-                where: { document },
-            });
-            if (documentAlreadyExist) {
-                errors.push('Document is already in use');
-            }
-        }
-        if (email) {
-            const emailAlreadyExist = await this.databaseService.assignor.findUnique({
-                where: { email },
-            });
-            if (emailAlreadyExist) {
-                errors.push('Email is already in use');
-            }
-        }
-        if (errors.length > 0) {
-            throw new common_1.BadRequestException(errors.join(', '));
-        }
-        const updateData = { document, email, phone, name };
         try {
-            return await this.databaseService.assignor.update({
-                where: { id },
-                data: updateData,
-            });
+            const updatedAssignor = await this.assignorRepository.update(id, data);
+            return updatedAssignor;
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
         }
     }
     async remove(id) {
-        await this.findById(id);
-        await this.databaseService.assignor.delete({
-            where: { id },
-        });
-        return { message: `Assignor with ID ${id} has been deleted successfully` };
+        return await this.assignorRepository.remove(id);
     }
 };
 exports.AssignorService = AssignorService;
 exports.AssignorService = AssignorService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [database_service_1.DatabaseService])
+    __metadata("design:paramtypes", [assignor_repository_1.AssignorRepository])
 ], AssignorService);
 //# sourceMappingURL=assignor.service.js.map

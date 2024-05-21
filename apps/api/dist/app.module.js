@@ -15,6 +15,7 @@ const path_1 = require("path");
 const database_module_1 = require("./database/database.module");
 const payable_module_1 = require("./payable/payable.module");
 const assignor_module_1 = require("./assignor/assignor.module");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -27,6 +28,7 @@ exports.AppModule = AppModule = __decorate([
             database_module_1.DatabaseModule,
             payable_module_1.PayableModule,
             assignor_module_1.AssignorModule,
+            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
