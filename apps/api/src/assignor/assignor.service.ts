@@ -4,16 +4,19 @@ import { cnpj, cpf } from 'cpf-cnpj-validator';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { isUUID } from 'class-validator';
 import { DatabaseService } from '../database/database.service';
+import { Assignor } from '@prisma/client';
 
 @Injectable()
 export class AssignorService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(
-    createAssignorDto: CreateAssignorDto,
-  ): Promise<CreateAssignorDto> {
+  async create({
+    document,
+    email,
+    name,
+    phone,
+  }: CreateAssignorDto): Promise<Assignor | { message: string }> {
     const errors = [];
-    const { document, email } = createAssignorDto;
 
     if (!cpf.isValid(document) && !cnpj.isValid(document)) {
       throw new BadRequestException(`${document} is not a valid document`);
@@ -40,20 +43,28 @@ export class AssignorService {
     }
 
     try {
-      return await this.databaseService.assignor.create({
-        data: createAssignorDto,
+      const assignor = await this.databaseService.assignor.create({
+        data: {
+          document,
+          email,
+          name,
+          phone,
+        },
       });
+      return assignor;
     } catch (error) {
       // Lança uma exceção com todas as mensagens de erro combinadas
       throw new BadRequestException(error.message);
     }
   }
 
-  async findAll() {
-    return await this.databaseService.assignor.findMany();
+  async findAll(): Promise<Assignor[]> {
+    const assignors = await this.databaseService.assignor.findMany();
+
+    return assignors;
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<Assignor | { message: string }> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException(`Invalid ID format: ${id}`);
     }
@@ -69,11 +80,12 @@ export class AssignorService {
     return assignor;
   }
 
-  async update(id: string, updateAssignorDto: UpdateAssignorDto) {
+  async update(id: string, data: UpdateAssignorDto): Promise<Assignor> {
     //check UUID and if exists
     await this.findById(id);
+    //pushes accumulated errors
     const errors = [];
-    const { document, email } = updateAssignorDto;
+    const { document, email, phone, name } = data;
 
     if (document) {
       if (!cpf.isValid(document) && !cnpj.isValid(document)) {
@@ -100,27 +112,19 @@ export class AssignorService {
     if (errors.length > 0) {
       throw new BadRequestException(errors.join(', '));
     }
+    const updateData = { document, email, phone, name };
 
-    const forbiddenAttributes = ['id', 'createdAt', 'updatedAt'];
-    const invalidAttributes = Object.keys(updateAssignorDto).filter((attr) =>
-      forbiddenAttributes.includes(attr),
-    );
-    if (invalidAttributes.length > 0) {
-      throw new BadRequestException(
-        `You can't change these attributes: ${invalidAttributes.join(', ')}`,
-      );
-    }
     try {
       return await this.databaseService.assignor.update({
         where: { id },
-        data: updateAssignorDto, // Pass the object in the correct format
+        data: updateData,
       });
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<Assignor | { message: string }> {
     //check UUID and if exists
     await this.findById(id);
 

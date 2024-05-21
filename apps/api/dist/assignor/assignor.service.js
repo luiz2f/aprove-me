@@ -18,9 +18,8 @@ let AssignorService = class AssignorService {
     constructor(databaseService) {
         this.databaseService = databaseService;
     }
-    async create(createAssignorDto) {
+    async create({ document, email, name, phone, }) {
         const errors = [];
-        const { document, email } = createAssignorDto;
         if (!cpf_cnpj_validator_1.cpf.isValid(document) && !cpf_cnpj_validator_1.cnpj.isValid(document)) {
             throw new common_1.BadRequestException(`${document} is not a valid document`);
         }
@@ -40,16 +39,23 @@ let AssignorService = class AssignorService {
             throw new common_1.BadRequestException(errors);
         }
         try {
-            return await this.databaseService.assignor.create({
-                data: createAssignorDto,
+            const assignor = await this.databaseService.assignor.create({
+                data: {
+                    document,
+                    email,
+                    name,
+                    phone,
+                },
             });
+            return assignor;
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
         }
     }
     async findAll() {
-        return await this.databaseService.assignor.findMany();
+        const assignors = await this.databaseService.assignor.findMany();
+        return assignors;
     }
     async findById(id) {
         if (!(0, class_validator_1.isUUID)(id, 4)) {
@@ -63,10 +69,10 @@ let AssignorService = class AssignorService {
         }
         return assignor;
     }
-    async update(id, updateAssignorDto) {
+    async update(id, data) {
         await this.findById(id);
         const errors = [];
-        const { document, email } = updateAssignorDto;
+        const { document, email, phone, name } = data;
         if (document) {
             if (!cpf_cnpj_validator_1.cpf.isValid(document) && !cpf_cnpj_validator_1.cnpj.isValid(document)) {
                 throw new common_1.BadRequestException(`${document} is not a valid document`);
@@ -89,15 +95,11 @@ let AssignorService = class AssignorService {
         if (errors.length > 0) {
             throw new common_1.BadRequestException(errors.join(', '));
         }
-        const forbiddenAttributes = ['id', 'createdAt', 'updatedAt'];
-        const invalidAttributes = Object.keys(updateAssignorDto).filter((attr) => forbiddenAttributes.includes(attr));
-        if (invalidAttributes.length > 0) {
-            throw new common_1.BadRequestException(`You can't change these attributes: ${invalidAttributes.join(', ')}`);
-        }
+        const updateData = { document, email, phone, name };
         try {
             return await this.databaseService.assignor.update({
                 where: { id },
-                data: updateAssignorDto,
+                data: updateData,
             });
         }
         catch (error) {

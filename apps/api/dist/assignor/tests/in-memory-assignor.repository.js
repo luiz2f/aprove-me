@@ -9,11 +9,11 @@ class InMemoryAssignorRepository {
         this.assignors.push(data);
         return data;
     }
-    async findAll() {
-        return this.assignors;
-    }
     async findById(id) {
         return this.assignors.find((assignor) => assignor.id === id);
+    }
+    async findAll() {
+        return this.assignors;
     }
     async update(id, data) {
         const index = this.assignors.findIndex((assignor) => assignor.id === id);

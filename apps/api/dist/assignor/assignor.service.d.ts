@@ -1,38 +1,19 @@
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { DatabaseService } from '../database/database.service';
+import { Assignor } from '@prisma/client';
 export declare class AssignorService {
     private readonly databaseService;
     constructor(databaseService: DatabaseService);
-    create(createAssignorDto: CreateAssignorDto): Promise<CreateAssignorDto>;
-    findAll(): Promise<{
-        id: string;
-        document: string;
-        email: string;
-        phone: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
-    findById(id: string): Promise<{
-        id: string;
-        document: string;
-        email: string;
-        phone: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
+    create({ document, email, name, phone, }: CreateAssignorDto): Promise<Assignor | {
+        message: string;
     }>;
-    update(id: string, updateAssignorDto: UpdateAssignorDto): Promise<{
-        id: string;
-        document: string;
-        email: string;
-        phone: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
+    findAll(): Promise<Assignor[]>;
+    findById(id: string): Promise<Assignor | {
+        message: string;
     }>;
-    remove(id: string): Promise<{
+    update(id: string, data: UpdateAssignorDto): Promise<Assignor>;
+    remove(id: string): Promise<Assignor | {
         message: string;
     }>;
 }
