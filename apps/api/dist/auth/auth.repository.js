@@ -13,22 +13,57 @@ exports.AuthRepository = void 0;
 const common_1 = require("@nestjs/common");
 const database_service_1 = require("../database/database.service");
 const jwt_1 = require("@nestjs/jwt");
+const bcrypt = require("bcrypt");
 let AuthRepository = class AuthRepository {
     constructor(databaseService, jwtService) {
         this.databaseService = databaseService;
         this.jwtService = jwtService;
     }
+    async get() {
+        return await this.databaseService.user.findMany();
+    }
+    async signUp(authCredentialsDto) {
+        const { login, password } = authCredentialsDto;
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = { login, password: hashedPassword };
+        try {
+            await this.databaseService.user.create({ data: user });
+        }
+        catch (error) {
+            if (error.code === 'P2002') {
+                throw new common_1.ConflictException('Username already exists');
+            }
+            else {
+                throw new common_1.InternalServerErrorException(error.code);
+            }
+        }
+    }
     async signIn(authCredentialsDto) {
         const { login, password } = authCredentialsDto;
-        console.log(process.env.JWT_SECRET);
+        const user = await this.databaseService.user.findUnique({
+            where: { login },
+        });
         if (login === 'aproveme' && password === 'aproveme') {
             const payload = { login };
             const accesToken = await this.jwtService.sign(payload);
+            delete authCredentialsDto.password;
             return { accesToken };
         }
         else {
+            delete authCredentialsDto.password;
             throw new common_1.UnauthorizedException('Please check your login credentials');
         }
+    }
+    async validate(payload) {
+        const { login } = payload;
+        const user = await this.databaseService.user.findUnique({
+            where: { login },
+        });
+        if (!user) {
+            throw new common_1.UnauthorizedException();
+        }
+        return user;
     }
 };
 exports.AuthRepository = AuthRepository;

@@ -1,28 +1,23 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import API_BASE_URL from "./apiConfig";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import LoginSignup from "./pages/LoginSignup";
+import AppLayout from "./ui/AppLayout";
+import Payables from "./features/payable/Payables";
+import Assignors from "./features/assignor/Assignors";
 
 function App() {
-  const [greeting, setGreeting] = useState("");
-
-  useEffect(() => {
-    fetch(API_BASE_URL)
-      .then((res) => res.text())
-      .then(setGreeting);
-  }, [setGreeting]);
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>{greeting}</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Navigate replace to="login" />} />
+
+          <Route path="login" element={<LoginSignup />}></Route>
+          <Route path="/" element={<AppLayout />}>
+            <Route path="recebiveis" element={<Payables />} />
+            <Route path="cedentes" element={<Assignors />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

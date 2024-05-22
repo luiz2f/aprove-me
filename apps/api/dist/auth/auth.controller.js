@@ -20,18 +20,37 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
+    signUp(authCredentialsDto) {
+        return this.authService.signUp(authCredentialsDto);
+    }
     create(authCredentialsDto) {
         return this.authService.signIn(authCredentialsDto);
+    }
+    get() {
+        return this.authService.get();
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)(''),
+    (0, common_1.Post)('/signup'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [auth_credentials_dto_1.AuthCredentialsDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "signUp", null);
+__decorate([
+    (0, common_1.Post)('/signin'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_credentials_dto_1.AuthCredentialsDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(''),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "get", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('integrations/auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

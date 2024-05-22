@@ -8,12 +8,15 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PayableService } from './payable.service';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('integrations/payable')
+@UseGuards(AuthGuard('jwt'))
 export class PayableController {
   constructor(private readonly payableService: PayableService) {}
 

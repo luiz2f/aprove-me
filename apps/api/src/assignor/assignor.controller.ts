@@ -8,12 +8,15 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AssignorService } from './assignor.service';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
+import { AuthGuard, PassportModule } from '@nestjs/passport';
 
 @Controller('integrations/assignor')
+@UseGuards(AuthGuard('jwt'))
 export class AssignorController {
   constructor(private readonly assignorService: AssignorService) {}
 

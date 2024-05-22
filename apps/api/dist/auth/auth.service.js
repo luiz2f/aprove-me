@@ -16,8 +16,17 @@ let AuthService = class AuthService {
     constructor(authRepository) {
         this.authRepository = authRepository;
     }
+    async get() {
+        return await this.authRepository.get();
+    }
+    async signUp(authCredentialsDto) {
+        return await this.authRepository.signUp(authCredentialsDto);
+    }
     async signIn(authCredentialsDto) {
         return await this.authRepository.signIn(authCredentialsDto);
+    }
+    async validate(payload) {
+        return await this.authRepository.validate(payload);
     }
 };
 exports.AuthService = AuthService;

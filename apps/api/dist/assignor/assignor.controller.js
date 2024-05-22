@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const assignor_service_1 = require("./assignor.service");
 const create_assignor_dto_1 = require("./dto/create-assignor.dto");
 const update_assignor_dto_1 = require("./dto/update-assignor.dto");
+const passport_1 = require("@nestjs/passport");
 let AssignorController = class AssignorController {
     constructor(assignorService) {
         this.assignorService = assignorService;
@@ -77,6 +78,7 @@ __decorate([
 ], AssignorController.prototype, "remove", null);
 exports.AssignorController = AssignorController = __decorate([
     (0, common_1.Controller)('integrations/assignor'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [assignor_service_1.AssignorService])
 ], AssignorController);
 //# sourceMappingURL=assignor.controller.js.map

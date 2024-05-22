@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const payable_service_1 = require("./payable.service");
 const create_payable_dto_1 = require("./dto/create-payable.dto");
 const update_payable_dto_1 = require("./dto/update-payable.dto");
+const passport_1 = require("@nestjs/passport");
 let PayableController = class PayableController {
     constructor(payableService) {
         this.payableService = payableService;
@@ -78,6 +79,7 @@ __decorate([
 ], PayableController.prototype, "remove", null);
 exports.PayableController = PayableController = __decorate([
     (0, common_1.Controller)('integrations/payable'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [payable_service_1.PayableService])
 ], PayableController);
 //# sourceMappingURL=payable.controller.js.map
