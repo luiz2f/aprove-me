@@ -5,5 +5,5 @@ export declare class AuthController {
     constructor(authService: AuthService);
     signUp(authCredentialsDto: AuthCredentialsDto): Promise<void>;
     create(authCredentialsDto: AuthCredentialsDto): Promise<object>;
-    get(): Promise<object>;
+    get(): object;
 }

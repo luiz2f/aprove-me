@@ -48,9 +48,9 @@ export class AuthRepository {
 
     if (login === 'aproveme' && password === 'aproveme') {
       const payload: JwtPayload = { login };
-      const accesToken = await this.jwtService.sign(payload);
+      const accessToken = await this.jwtService.sign(payload);
       delete authCredentialsDto.password;
-      return { accesToken };
+      return { accessToken };
     } else {
       delete authCredentialsDto.password;
 

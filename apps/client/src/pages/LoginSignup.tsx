@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import logoBankme from "../assets/logo-bankme.png";
-
+import { useLogin } from "../features/authentication/useLogin";
 const StyledBackground = styled.div`
   width: 100%;
   height: 100vh;
@@ -129,11 +129,18 @@ const Slider = styled.div`
 `;
 
 function LoginSignup() {
-  const [login, setLogin] = useState(true);
+  const [typeLogin, setTypeLogin] = useState(true);
+
+  const { login, isPending } = useLogin();
+
+  function handleLogin(e) {
+    e.preventDefault();
+    login();
+  }
 
   return (
     <StyledBackground>
-      <StyledLoginBox className={login ? "" : "slide"}>
+      <StyledLoginBox className={typeLogin ? "" : "slide"}>
         <Slider>
           <LogSigBox>
             <StyledLogoHolder>
@@ -143,11 +150,13 @@ function LoginSignup() {
             <StyledSectionText>
               Gestão de Cedentes e Recebíveis
             </StyledSectionText>
+            {/* form */}
             <StyledInput placeholder="Usuário"></StyledInput>
             <StyledInput placeholder="Senha" type="password"></StyledInput>
-            <StyledButton>Login</StyledButton>
-            <StyledLink onClick={() => setLogin((login) => !login)}>
-              Criar uma conta
+            <StyledButton onClick={(e) => handleLogin(e)}>Login</StyledButton>
+            {/* form */}
+            <StyledLink onClick={() => setTypeLogin((typeLogin) => !typeLogin)}>
+              {isPending}{" "}
             </StyledLink>
           </LogSigBox>
           <LogSigBox className="signup">
@@ -161,7 +170,7 @@ function LoginSignup() {
             <StyledInput placeholder="Novo Usuário"></StyledInput>
             <StyledInput placeholder="Senha" type="password"></StyledInput>
             <StyledButton>Cadastrar Usuário</StyledButton>
-            <StyledLink onClick={() => setLogin((login) => !login)}>
+            <StyledLink onClick={() => setTypeLogin((typeLogin) => !typeLogin)}>
               Já tenho uma conta
             </StyledLink>
           </LogSigBox>

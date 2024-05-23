@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import logoBankme from "../assets/logo-bankme.png";
+import { useLogout } from "../features/authentication/useLogout";
 
 const StyledHeader = styled.div`
   background-color: #fff;
@@ -52,6 +53,12 @@ const StyledGreeting = styled.div`
   font-weight: 500;
 `;
 function Header() {
+  const { logout } = useLogout();
+
+  function handleLogout(e) {
+    e.preventDefault;
+    logout();
+  }
   return (
     <StyledHeader>
       <StyledLogoHolder>
@@ -61,7 +68,9 @@ function Header() {
         <StyledGreeting>Olá, Usuário</StyledGreeting>
         <StyledUserExit>
           <StyledUserIcon></StyledUserIcon>
-          <StyledExitButton>Sair da Conta</StyledExitButton>
+          <StyledExitButton onClick={(e) => handleLogout(e)}>
+            Sair da Conta
+          </StyledExitButton>
         </StyledUserExit>
       </StyledUserHolder>
     </StyledHeader>

@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('integrations/auth')
 export class AuthController {
@@ -15,7 +16,8 @@ export class AuthController {
     return this.authService.signIn(authCredentialsDto);
   }
   @Get('')
-  get(): Promise<object> {
-    return this.authService.get();
+  @UseGuards(AuthGuard('jwt'))
+  get(): object {
+    return { message: 'Authorized' };
   }
 }

@@ -16,6 +16,7 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const auth_credentials_dto_1 = require("./dto/auth-credentials.dto");
+const passport_1 = require("@nestjs/passport");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -27,7 +28,7 @@ let AuthController = class AuthController {
         return this.authService.signIn(authCredentialsDto);
     }
     get() {
-        return this.authService.get();
+        return { message: 'Authorized' };
     }
 };
 exports.AuthController = AuthController;
@@ -47,9 +48,10 @@ __decorate([
 ], AuthController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(''),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", Object)
 ], AuthController.prototype, "get", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('integrations/auth'),
