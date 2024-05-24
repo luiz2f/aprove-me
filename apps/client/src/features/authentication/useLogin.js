@@ -1,20 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login as loginApi } from "../../services/apiAuth";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "./authProvider";
 
 export function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { setIsAuth } = useAuthContext();
   const { mutate: login, isPending } = useMutation({
     mutationFn: () => loginApi(),
     onSuccess: (data) => {
       const user = { ...data };
       user.auth = true;
-
       queryClient.setQueryData(["user"], user);
-      setIsAuth(true);
       navigate("/recebiveis", { replace: true });
     },
     onError: (err) => {

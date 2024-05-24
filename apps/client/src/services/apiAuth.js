@@ -36,7 +36,7 @@ export async function validateUser() {
   let authorized;
   const token = localStorage.getItem("accessToken");
   if (!token) {
-    throw new Error("No token, please login");
+    throw new Error("Please login");
   }
 
   try {
@@ -48,11 +48,11 @@ export async function validateUser() {
       },
     });
     if (response.ok) {
-      return { authorized: true };
+      return { auth: true };
     }
   } catch (error) {
     localStorage.removeItem("accessToken");
 
-    return { authorized: false };
+    return { auth: false };
   }
 }
