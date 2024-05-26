@@ -7,6 +7,8 @@ import { DatabaseModule } from './database/database.module';
 import { PayableModule } from './payable/payable.module';
 import { AssignorModule } from './assignor/assignor.module';
 import { AuthModule } from './auth/auth.module';
+// import { HttpExceptionFilter } from './http-exception.filter';
+// import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,6 +21,12 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
+  ],
 })
 export class AppModule {}

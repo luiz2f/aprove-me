@@ -32,9 +32,15 @@ export function logout() {
   localStorage.removeItem("accessToken");
 }
 
-export async function validateUser() {
-  let authorized;
+export function getToken() {
   const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw new Error("Please login");
+  }
+  return token;
+}
+export async function validateUser() {
+  const token = getToken();
   if (!token) {
     throw new Error("Please login");
   }

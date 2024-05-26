@@ -9,11 +9,13 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  UseFilters,
 } from '@nestjs/common';
 import { AssignorService } from './assignor.service';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { AuthGuard, PassportModule } from '@nestjs/passport';
+// import { HttpExceptionFilter } from 'src/http-exception.filter';
 
 @Controller('integrations/assignor')
 @UseGuards(AuthGuard('jwt'))

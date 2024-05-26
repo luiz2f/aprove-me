@@ -5,20 +5,20 @@ import { AssignorRepository } from './assignor.repository';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
 
-type errorType = {
-  message: string;
-};
-
 @Injectable()
 export class AssignorService {
   constructor(private readonly assignorRepository: AssignorRepository) {}
 
-  async create(data: CreateAssignorDto): Promise<Assignor | errorType> {
+  async create(
+    data: CreateAssignorDto,
+  ): Promise<Assignor | { message: string }> {
     try {
-      const newAssignor = await this.assignorRepository.create(data);
-      return newAssignor;
+      return await this.assignorRepository.create(data);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException('An unexpected error occurred');
     }
   }
 
@@ -26,27 +26,31 @@ export class AssignorService {
     return await this.assignorRepository.findAll();
   }
 
-  async findById(id: string): Promise<Assignor | errorType> {
+  async findById(id: string): Promise<Assignor | { message: string }> {
     try {
-      const payable = await this.assignorRepository.findById(id);
-      return payable;
+      return await this.assignorRepository.findById(id);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException('An unexpected error occurred');
     }
   }
   async update(
     id: string,
     data: UpdateAssignorDto,
-  ): Promise<Assignor | errorType> {
+  ): Promise<Assignor | { message: string }> {
     try {
-      const updatedAssignor = await this.assignorRepository.update(id, data);
-      return updatedAssignor;
+      return await this.assignorRepository.update(id, data);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException('An unexpected error occurred');
     }
   }
 
-  async remove(id: string): Promise<Assignor | errorType> {
+  async remove(id: string): Promise<Assignor | { message: string }> {
     return await this.assignorRepository.remove(id);
   }
 }

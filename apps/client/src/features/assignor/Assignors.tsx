@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import AssignorTable from "./AssignorTable";
 import { Button } from "../../ui/Button";
-import CreateAssignor from "./CreateAssignor";
+import CreateAssignorForm from "./CreateAssignorForm";
 
 const Active = styled.div`
   color: #333;
@@ -30,7 +30,7 @@ const Flex = styled.div`
 function Assignors() {
   return (
     <>
-      <CreateAssignor />
+      <CreateAssignorForm />
       <Flex>
         <Active>Cedentes </Active>
         {/* <SearchBar>

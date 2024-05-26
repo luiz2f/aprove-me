@@ -18,11 +18,13 @@ let AssignorService = class AssignorService {
     }
     async create(data) {
         try {
-            const newAssignor = await this.assignorRepository.create(data);
-            return newAssignor;
+            return await this.assignorRepository.create(data);
         }
         catch (error) {
-            throw new common_1.BadRequestException(error.message);
+            if (error instanceof common_1.BadRequestException) {
+                throw error;
+            }
+            throw new common_1.BadRequestException('An unexpected error occurred');
         }
     }
     async findAll() {
@@ -30,20 +32,24 @@ let AssignorService = class AssignorService {
     }
     async findById(id) {
         try {
-            const payable = await this.assignorRepository.findById(id);
-            return payable;
+            return await this.assignorRepository.findById(id);
         }
         catch (error) {
-            throw new common_1.BadRequestException(error.message);
+            if (error instanceof common_1.BadRequestException) {
+                throw error;
+            }
+            throw new common_1.BadRequestException('An unexpected error occurred');
         }
     }
     async update(id, data) {
         try {
-            const updatedAssignor = await this.assignorRepository.update(id, data);
-            return updatedAssignor;
+            return await this.assignorRepository.update(id, data);
         }
         catch (error) {
-            throw new common_1.BadRequestException(error.message);
+            if (error instanceof common_1.BadRequestException) {
+                throw error;
+            }
+            throw new common_1.BadRequestException('An unexpected error occurred');
         }
     }
     async remove(id) {
