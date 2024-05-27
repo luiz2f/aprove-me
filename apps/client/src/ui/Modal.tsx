@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import { HiXMark } from "react-icons/hi2";
 import { createPortal } from "react-dom";
 import { cloneElement, createContext, useContext, useState } from "react";
@@ -23,7 +22,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: var(--backdrop-color);
+  background-color: #f23eff55;
   backdrop-filter: blur(4px);
   z-index: 1000;
   transition: all 0.5s;
@@ -33,7 +32,7 @@ const Button = styled.button`
   background: none;
   border: none;
   padding: 0.4rem;
-  border-radius: var(--border-radius-sm);
+  border-radius: 2px solid red;
   transform: translateX(0.8rem);
   transition: all 0.2s;
   position: absolute;
@@ -41,7 +40,7 @@ const Button = styled.button`
   right: 1.9rem;
 
   &:hover {
-    background-color: var(--color-grey-100);
+    background-color: green;
   }
 
   & svg {
@@ -50,7 +49,7 @@ const Button = styled.button`
     /* Sometimes we need both */
     /* fill: var(--color-grey-500);
     stroke: var(--color-grey-500); */
-    color: var(--color-grey-500);
+    color: green;
   }
 `;
 
@@ -93,15 +92,6 @@ function Window({ children, name }) {
     document.body
   );
 }
-
-Modal.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClose: PropTypes.func,
-};
-Window.propTypes = {
-  children: PropTypes.node.isRequired,
-  name: PropTypes.string.isRequired,
-};
 
 Modal.Open = Open;
 Modal.Window = Window;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPayables } from "../../services/apiPayables";
 
-export function useAssignors() {
+export function usePayables() {
   const {
     isPending,
     data: payables,

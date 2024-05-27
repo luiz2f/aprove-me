@@ -3,6 +3,7 @@ import Table from "../../ui/Table";
 import PayableRow from "./PayableRow";
 import { usePayables } from "./usePayables";
 import Spinner from "../../ui/Spinner";
+import Menus from "../../ui/Menu";
 
 const StyledCenter = styled.div``;
 
@@ -13,22 +14,28 @@ function PayableTable() {
     return <Spinner />;
   }
   return (
-    <Table $columns="2fr 1fr 1fr 10px">
-      <Table.Header>
-        <StyledCenter>ID do Recebível</StyledCenter>
-        <StyledCenter>Valor</StyledCenter>
-        <StyledCenter>Emissão</StyledCenter>
-        <div>a</div>
-      </Table.Header>
-      <div>
-        <Table.Body
-          data={payables}
-          render={(payable) => (
-            <PayableRow key={payable.id} payable={payable} />
+    <Menus>
+      <Table $columns="2fr 1fr 1fr 10px">
+        <Table.Header>
+          <StyledCenter>ID do Recebível</StyledCenter>
+          <StyledCenter>Valor</StyledCenter>
+          <StyledCenter>Emissão</StyledCenter>
+          <div>a</div>
+        </Table.Header>
+        <div>
+          {payables ? (
+            <Table.Body
+              data={payables}
+              render={(payable) => (
+                <PayableRow key={payable.id} payable={payable} />
+              )}
+            />
+          ) : (
+            ""
           )}
-        />
-      </div>
-    </Table>
+        </div>
+      </Table>
+    </Menus>
   );
 }
 

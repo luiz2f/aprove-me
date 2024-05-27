@@ -1,19 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAssignor as createAssignorApi } from "../../services/apiAssignors";
+import { createPayable as createPayableApi } from "../../services/apiPayables";
 
-export function useCreateAssignor() {
+export function useCreatePayable() {
   const queryClient = useQueryClient();
 
   const {
-    mutate: createAssignor,
+    mutate: createPayable,
     isPending: isCreating,
     error,
   } = useMutation({
-    mutationFn: createAssignorApi,
+    mutationFn: createPayableApi,
     onSuccess: () => {
-      // Invalida as queries no queryClient
       queryClient.invalidateQueries({
-        queryKey: ["assignor"],
+        queryKey: ["payable"],
       });
     },
     onError: (err) => {
@@ -21,5 +20,5 @@ export function useCreateAssignor() {
     },
   });
 
-  return { createAssignor, isCreating, error };
+  return { createPayable, isCreating, error };
 }

@@ -81,7 +81,7 @@ export async function getAssignors() {
     }
     return await response.json();
   } catch (error) {
-    console.error("Error creating assignor:", error.message);
+    console.error("Error getting assignors:", error.message);
     throw error; // Rethrow the error after logging it.
   }
 }

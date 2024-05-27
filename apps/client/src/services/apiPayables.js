@@ -34,26 +34,9 @@ async function getJWT() {
   return config;
 }
 
-// export async function createAssignor(newAssignor) {
-//   const request = await postJWT(newAssignor);
-//   fetch(apiUrl, request)
-//     .then((res) => {
-//       if (!res.ok) {
-//         return res.text().then((text) => {
-//           throw new Error(text);
-//         });
-//       } else {
-//         return res.json();
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// }
-
-export async function createAssignor(newAssignor) {
+export async function createPayable(newPayable) {
   try {
-    const request = await postJWT(newAssignor);
+    const request = await postJWT(newPayable);
     const response = await fetch(apiUrl, request);
     const data = await response.json();
 
@@ -71,7 +54,7 @@ export async function createAssignor(newAssignor) {
   }
 }
 
-export async function getAssignors() {
+export async function getPayables() {
   try {
     const request = await getJWT();
     const response = await fetch(apiUrl, request);
@@ -81,7 +64,7 @@ export async function getAssignors() {
     }
     return await response.json();
   } catch (error) {
-    console.error("Error creating assignor:", error.message);
+    console.error("Error getting payables:", error.message);
     throw error; // Rethrow the error after logging it.
   }
 }

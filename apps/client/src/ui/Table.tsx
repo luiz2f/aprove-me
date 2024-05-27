@@ -94,10 +94,16 @@ function Header({ children }: { children: React.ReactNode }) {
     </StyledHeader>
   );
 }
-function Row({ children }: { children: React.ReactNode }) {
+function Row({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
   const { $columns } = useContext(TableContext);
   return (
-    <StyledRow role="row" $columns={$columns}>
+    <StyledRow role="row" $columns={$columns} onClick={onClick}>
       {children}
     </StyledRow>
   );

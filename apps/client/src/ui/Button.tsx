@@ -29,18 +29,18 @@ const variations = {
   `,
   secondary: css`
     color: #333;
-    background-color: #EAF1FC
-
+    background-color: #f8fafc;
+    border: 1px solid #aeaeae;
     &:hover {
-      background-color:#EAF1FC
+      background-color: #f1f5f9;
     }
   `,
   danger: css`
-    color: var(--color-red-100);
-    background-color: var(--color-red-700);
+    color: #fff;
+    background-color: #cc2929;
 
     &:hover {
-      background-color: var(--color-red-800);
+      background-color: #c95454;
     }
   `,
 };
@@ -62,7 +62,7 @@ export const Button = styled.button`
   &:active {
     background-color: #0a36b0;
   }
-  ${(props) => variations[props.$variation]}
+  ${(props) => variations[props.type]}
   ${(props) => sizes[props.size]}
 
   ${(props) =>
@@ -72,7 +72,7 @@ export const Button = styled.button`
   `}
 `;
 Button.defaultProps = {
-  $variation: "primary",
+  type: "primary",
   sizes: "medium",
   $widthohp: "false",
 };

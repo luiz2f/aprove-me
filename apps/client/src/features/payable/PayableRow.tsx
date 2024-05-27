@@ -1,6 +1,18 @@
 import styled from "styled-components";
 import Table from "../../ui/Table";
 import { numberToBRL } from "../../utils/numberToBRL";
+import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
+import Modal from "../../ui/Modal";
+import Menus from "../../ui/Menu";
+import {
+  HiArrowDownOnSquare,
+  HiArrowUpOnSquare,
+  HiEye,
+  HiTrash,
+} from "react-icons/hi2";
+import { useNavigate, useParams } from "react-router-dom";
+import PayableDetails from "./PayablesDetails";
+import { useEffect, useState } from "react";
 
 const ID = styled.div`
   font-size: 1rem;
@@ -43,7 +55,7 @@ interface Payable {
   valor: number;
   nome: string;
   outroId: string;
-  dataEmissao: string;
+  emissionDate: string;
 }
 
 interface PayableRowProps {
@@ -51,55 +63,59 @@ interface PayableRowProps {
 }
 
 function PayableRow({ payable }: PayableRowProps) {
-  const { id, valor, dataEmissao } = payable;
-  return (
-    <Table.Row>
-      <ID>{id}</ID>
+  const { id: payableId, value, emissionDate } = payable;
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const { id } = useParams();
 
-      <Amount>{numberToBRL(valor)}</Amount>
-      <Date>{dataEmissao}</Date>
-      <div>s</div>
-      {/* <Modal>
+  const handleGoToPayable = () => {
+    setModalOpen(true);
+    navigate(`/recebiveis/${payableId}`);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    navigate("/recebiveis");
+  };
+
+  useEffect(() => {
+    if (id === payableId) {
+      setModalOpen(true);
+    }
+  }, [id, payableId]);
+
+  return (
+    <Modal>
+      <Table.Row onClick={() => handleGoToPayable()}>
+        <ID>{payableId}</ID>
+
+        <Amount>{numberToBRL(value)}</Amount>
+        <Date>{ISOtoStringDate(emissionDate)}</Date>
+
         <Menus.Menu>
-          <Menus.Toogle id={bookingId} />
-          <Menus.List id={bookingId}>
-            <Menus.Button
-              icon={<HiEye />}
-              onClick={() => navigate(`/bookings/${bookingId}`)}
-            >
-              See details
-            </Menus.Button>
-            {status === "unconfirmed" && (
-              <Menus.Button
-                icon={<HiArrowDownOnSquare />}
-                onClick={() => navigate(`/checkin/${bookingId}`)}
-              >
-                Check in
-              </Menus.Button>
-            )}
-            {status === "checked-in" && (
-              <Menus.Button
-                icon={<HiArrowUpOnSquare />}
-                onClick={() => checkout(bookingId)}
-                disabled={isCheckingOut}
-              >
-                Check Out
-              </Menus.Button>
-            )}
+          <Menus.Toogle id={payableId} />
+          <Menus.List id={payableId}>
+            <Menus.Btn icon={<HiEye />} onClick={() => handleGoToPayable()}>
+              Visualizar
+            </Menus.Btn>
+
             <Modal.Open opens="delete">
-              <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              <Menus.Btn icon={<HiTrash />}>Delete</Menus.Btn>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
         <Modal.Window name="delete">
-          <ConfirmDelete
+          {/* <ConfirmDelete
             resourceName={`booking #${bookingId} from ${guestName} `}
             onConfirm={() => deleteBooking(bookingId)}
             disabled={isDeleting}
-          />
+          /> */}
         </Modal.Window>
-      </Modal> */}
-    </Table.Row>
+      </Table.Row>
+      {(modalOpen || id) && (
+        <PayableDetails payable={payable} onClose={handleModalClose} />
+      )}
+    </Modal>
   );
 }
 

@@ -8,7 +8,6 @@ const StyledAppLayout = styled.div`
   overflow-y: hidden;
 `;
 const StyledPadding = styled.div`
-  padding: 48px;
   height: 100%;
   overflow-y: scroll;
 `;

@@ -3,12 +3,11 @@ import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import { Button } from "../../ui/Button";
 import { useForm } from "react-hook-form";
-import { cnpj, cpf } from "cpf-cnpj-validator";
-import { useCreateAssignor } from "./useCreatePayable";
-import { useErrorHandling } from "./error-handling/useErrorHandling";
-import { makeEmail } from "./makeEmail";
+import { useCreatePayable } from "./useCreatePayable";
+import StyledSelect from "../../ui/StyledSelect";
+import { useAssignors } from "../assignor/useAssignors";
 
-const StyledCreateAssignor = styled.div`
+const StyledCreatePayable = styled.div`
   max-width: 400px;
   height: fit-content;
   color: #333;
@@ -18,7 +17,7 @@ const StyledCreateAssignor = styled.div`
   margin: auto;
   border-radius: 10px;
 `;
-const StyledTitleCreateAssignor = styled.div`
+const StyledTitleCreatePayable = styled.div`
   font-size: 28px;
   margin-bottom: 28px;
   font-weight: 700;
@@ -30,142 +29,85 @@ const StyledButtonBox = styled.div`
 `;
 const Form = styled.form``;
 
-export default function CreateAssignorForm() {
+export default function CreatePayableForm() {
   const { register, handleSubmit, reset, formState } = useForm();
   const { errors } = formState;
-  const { createAssignor, isCreating, error: errorsApi } = useCreateAssignor();
-  const { errorFlags, resetErrorFlags } = useErrorHandling(errorsApi?.message);
+  const { createPayable, isCreating, error: errorsApi } = useCreatePayable();
+  const { assignors } = useAssignors();
+
+  function calendarShowPicker(e) {
+    e?.target?.showPicker();
+    console.log(e.target);
+  }
 
   function onSubmit(data) {
-    const cleanedDocument = data.document.replace(/[^\d.-]/g, "");
-    // Atualizar os dados com o document limpo
-    data = { ...data, document: cleanedDocument };
+    const formattedData = {
+      ...data,
+      value: parseFloat(data.value),
+      emissionDate: new Date(data.emissionDate).toISOString(),
+    };
 
-    createAssignor(data, {
-      onSuccess: (data) => {
-        reset({
-          name: "",
-          document: "",
-          email: "",
-          phone: "",
-        });
-        resetErrorFlags();
+    console.log(formattedData);
+    createPayable(formattedData, {
+      onSuccess: () => {
+        reset();
       },
     });
   }
   function onError(error) {
     console.log(error, "sub");
   }
-  function validateDocument(value) {
-    if (!cpf.isValid(value) && !cnpj.isValid(value)) {
-      return "Insira um CPF ou CNPJ válido";
-    }
-    return true;
-  }
-  function randomAssignor() {
-    let newAssignor = {
-      name: "Nomenilson da Silva Repetirdison",
-      document: cpf.generate(),
-      email: makeEmail(),
-      phone: "(99) 99999 9999",
-    };
-    reset(newAssignor);
-  }
-
-  // COLOCAR CPF CNPJ
 
   return (
-    <StyledCreateAssignor>
-      <StyledTitleCreateAssignor>
-        Cadastrar novo cedente
-      </StyledTitleCreateAssignor>
-      <Button onClick={randomAssignor}>Gerar dados</Button>
+    <StyledCreatePayable>
+      <StyledTitleCreatePayable>
+        Cadastrar novo recebível
+      </StyledTitleCreatePayable>
       <Form onSubmit={handleSubmit(onSubmit, onError)}>
-        <FormRow label="Nome" error={errors?.name?.message}>
-          <Input
-            $error={errors?.name?.message}
+        <FormRow label="ID do Cedente" error={errors?.assignorId?.message}>
+          <StyledSelect
+            $error={errors?.assignorId?.message}
             disabled={isCreating}
             type="text"
-            id="name"
-            {...register("name", {
+            id="assignorId"
+            {...register("assignorId", {
               required: "Campo obrigatório",
-              maxLength: {
-                value: 140,
-                message: "Nome deve ter no máximo 140 caracteres",
-              },
+            })}
+          >
+            <option value="">Selecione uma cedente</option>
+            {assignors?.map((assignor) => {
+              return (
+                <option key={assignor.id} value={assignor.id}>
+                  {assignor.id}
+                </option>
+              );
+            })}
+          </StyledSelect>
+        </FormRow>
+        <FormRow label="Valor" error={errors?.value?.message}>
+          <Input
+            $error={errors?.value?.message}
+            disabled={isCreating}
+            type="number"
+            step="0.01"
+            id="value"
+            {...register("value", {
+              required: "Campo obrigatório",
+              validate: (value) =>
+                parseFloat(value) >= 0.01 || "Inserir um valor válido",
             })}
           />
         </FormRow>
-
-        <FormRow
-          label="Documento (CPF ou CNPJ)"
-          error={
-            errorFlags?.document
-              ? "Documento já está em uso"
-              : "" || errors?.document?.message
-          }
-        >
+        <FormRow label="Data da Emissão" error={errors?.emissionDate?.message}>
           <Input
-            $error={errorFlags?.document || errors?.document?.message}
+            $error={errors?.emissionDate?.message}
             disabled={isCreating}
-            type="text"
-            id="document"
-            {...register("document", {
+            type="date"
+            id="emissionDate"
+            onClick={(e) => calendarShowPicker(e)}
+            onFocus={(e) => calendarShowPicker(e)}
+            {...register("emissionDate", {
               required: "Campo obrigatório",
-              validate: validateDocument,
-
-              minLength: {
-                value: 11,
-                message: "Insira um CPF ou CNPJ válido",
-              },
-              maxLength: {
-                value: 30,
-                message: "Documento deve ter no máximo 30 caracteres",
-              },
-            })}
-            onInput={(e) => {
-              e.target.value = e.target.value.replace(/[^\d.-]/g, "");
-            }}
-          />
-        </FormRow>
-        <FormRow
-          label="Email"
-          error={
-            (errorFlags?.email ? "Email já está em uso" : "") ||
-            errors?.email?.message
-          }
-        >
-          <Input
-            $error={errors?.email?.message || errorFlags?.email}
-            disabled={isCreating}
-            type="email"
-            id="email"
-            autoComplete="username"
-            {...register("email", {
-              required: "Campo obrigatório",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Endereço de email invalido",
-              },
-              maxLength: {
-                value: 140,
-                message: "Email deve ter no máximo 140 caracteres",
-              },
-            })}
-          />
-        </FormRow>
-        <FormRow label="Telefone" error={errors?.phone?.message}>
-          <Input
-            $error={errors?.phone?.message}
-            disabled={isCreating}
-            type="text"
-            id="phone"
-            {...register("phone", {
-              required: "Campo obrigatório",
-              minLength: {
-                value: 10,
-                message: "Insira um telefone válido: DDD + Número",
-              },
             })}
           />
         </FormRow>
@@ -176,6 +118,6 @@ export default function CreateAssignorForm() {
           </Button>
         </StyledButtonBox>
       </Form>
-    </StyledCreateAssignor>
+    </StyledCreatePayable>
   );
 }

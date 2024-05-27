@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import PayableTable from "./PayableTable";
 import { Button } from "../../ui/Button";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 const Active = styled.div`
   color: #333;
@@ -25,18 +27,27 @@ const Flex = styled.div`
 //   justify-content: space-between;
 //   margin-bottom: 14px;
 // `;
+const Padding = styled.div`
+  padding: 48px;
+`;
 
 function Payables() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <>
-      <Flex>
-        <Active>Recebíveis </Active>
-        {/* <SearchBar>
+      <Padding>
+        {/* <CreatePayableForm /> */}
+        <Flex>
+          <Active>Recebíveis </Active>
+          {/* <SearchBar>
           <SearchBarInput></SearchBarInput>
         </SearchBar> */}
-        <Button>Criar novo</Button>
-      </Flex>
-      <PayableTable />
+          <Button>Criar novo</Button>
+        </Flex>
+        <PayableTable />
+      </Padding>
     </>
   );
 }
