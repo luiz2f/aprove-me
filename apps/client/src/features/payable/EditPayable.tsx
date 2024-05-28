@@ -1,20 +1,22 @@
 import styled from "styled-components";
-import FormRow from "../../ui/FormRow";
-import Input from "../../ui/Input";
-import { Button } from "../../ui/Button";
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { useCreatePayable } from "./useCreatePayable";
-import StyledSelect from "../../ui/StyledSelect";
-import { useAssignors } from "../assignor/useAssignors";
-import { Info } from "../../ui/InfoDetails";
-import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
 import { HiOutlineXMark } from "react-icons/hi2";
+import { useCreatePayable } from "./useCreatePayable";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { useAssignors } from "../assignor/useAssignors";
+import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
+import { Button } from "../../ui/Button";
+import { Info } from "../../ui/InfoDetails";
 import { StyledModal } from "../../ui/StyledModal";
 import { IconButton } from "../../ui/IconButton";
-import toast from "react-hot-toast";
+import Input from "../../ui/Input";
+import StyledSelect from "../../ui/StyledSelect";
+import FormRow from "../../ui/FormRow";
 
 const StyledCreatePayable = styled.div`
+  box-shadow: 0 0 20px #00000012;
+
   height: fit-content;
   color: #333;
   background-color: #fff;

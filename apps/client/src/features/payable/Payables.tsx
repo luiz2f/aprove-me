@@ -34,30 +34,25 @@ const Padding = styled.div`
 `;
 
 function Payables() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
-
   return (
-    <>
-      <Modal>
-        <Padding>
-          {/* <CreatePayableForm /> */}
-          <Flex>
-            <Active>Recebíveis </Active>
-            {/* <SearchBar>
+    <Modal>
+      <Padding>
+        {/* <CreatePayableForm /> */}
+        <Flex>
+          <Active>Recebíveis </Active>
+          {/* <SearchBar>
           <SearchBarInput></SearchBarInput>
         </SearchBar> */}
-            <Modal.Open opens="createPayable">
-              <Button onClick={() => navigate("new")}>Criar novo</Button>
-            </Modal.Open>
-          </Flex>
-          <PayableTable />
-        </Padding>
-        <Modal.Window name="createPayable">
-          <CreatePayableForm />
-        </Modal.Window>
-      </Modal>
-    </>
+          <Modal.Open opens="createPayable">
+            <Button>Criar novo</Button>
+          </Modal.Open>
+        </Flex>
+        <PayableTable />
+      </Padding>
+      <Modal.Window name="createPayable">
+        <CreatePayableForm />
+      </Modal.Window>
+    </Modal>
   );
 }
 

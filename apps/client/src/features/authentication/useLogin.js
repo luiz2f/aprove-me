@@ -6,7 +6,7 @@ export function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { mutate: login, isPending } = useMutation({
-    mutationFn: () => loginApi(),
+    mutationFn: loginApi,
     onSuccess: (data) => {
       const user = { ...data };
       user.auth = true;

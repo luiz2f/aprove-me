@@ -26,5 +26,5 @@ select:focus-visible,
 button:focus,
 button:focus-visible {
   /* box-shadow: 0px 0px 0px 2px #005fff; */
-  outline: 4px solid #b4dd22;
+  outline: 4px solid #005fff;
 }

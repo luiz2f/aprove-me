@@ -18,7 +18,6 @@ async function postJWT(data) {
   };
   return request;
 }
-
 async function getJWT() {
   const token = getToken();
   if (!token) {
@@ -33,28 +32,48 @@ async function getJWT() {
   };
   return config;
 }
+async function patchJWT(data) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("No token found");
+  }
 
-// export async function createAssignor(newAssignor) {
-//   const request = await postJWT(newAssignor);
-//   fetch(apiUrl, request)
-//     .then((res) => {
-//       if (!res.ok) {
-//         return res.text().then((text) => {
-//           throw new Error(text);
-//         });
-//       } else {
-//         return res.json();
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// }
+  let request = {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+  return request;
+}
+async function deleteJWT() {
+  const token = getToken();
+  if (!token) {
+    throw new Error("No token found");
+  }
 
-export async function createAssignor(newAssignor) {
+  let request = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return request;
+}
+
+export async function createAssignor(assignor) {
+  const id = assignor.id;
+  // If dont have an id, is creating a new assignor
+  const hasId = !!id;
+  const newApiUrl = hasId ? `${apiUrl}/${id}` : apiUrl;
+
   try {
-    const request = await postJWT(newAssignor);
-    const response = await fetch(apiUrl, request);
+    const request = hasId
+      ? await patchJWT(assignor.newAssignor)
+      : await postJWT(assignor);
+    const response = await fetch(newApiUrl, request);
     const data = await response.json();
 
     if (!response.ok) {
@@ -63,11 +82,10 @@ export async function createAssignor(newAssignor) {
 
     return data;
   } catch (error) {
-    // Se for um objeto de erro conhecido, lance-o como está
     if (error.message) {
       throw new Error(error.message);
     }
-    throw error;
+    throw new Error(error);
   }
 }
 
@@ -82,6 +100,22 @@ export async function getAssignors() {
     return await response.json();
   } catch (error) {
     console.error("Error getting assignors:", error.message);
+    throw error; // Rethrow the error after logging it.
+  }
+}
+
+export async function deleteAssignor(id) {
+  const newApiUrl = `${apiUrl}/${id}`;
+  try {
+    const request = await deleteJWT();
+    const response = await fetch(newApiUrl, request);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error getting payables:", error.message);
     throw error; // Rethrow the error after logging it.
   }
 }

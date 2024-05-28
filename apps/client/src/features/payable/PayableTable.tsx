@@ -1,11 +1,8 @@
-import styled from "styled-components";
 import Table from "../../ui/Table";
 import PayableRow from "./PayableRow";
 import { usePayables } from "./usePayables";
 import Spinner from "../../ui/Spinner";
 import Menus from "../../ui/Menu";
-
-const StyledCenter = styled.div``;
 
 function PayableTable() {
   const { isPending, payables } = usePayables();
@@ -17,9 +14,9 @@ function PayableTable() {
     <Menus>
       <Table $columns="2fr 1fr 1fr 34px">
         <Table.Header>
-          <StyledCenter>ID do Recebível</StyledCenter>
-          <StyledCenter>Valor</StyledCenter>
-          <StyledCenter>Emissão</StyledCenter>
+          <div>ID do Recebível</div>
+          <div>Valor</div>
+          <div>Emissão</div>
           <div></div>
         </Table.Header>
         <div>

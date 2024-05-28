@@ -48,16 +48,31 @@ async function patchJWT(data) {
   };
   return request;
 }
+async function deleteJWT() {
+  const token = getToken();
+  if (!token) {
+    throw new Error("No token found");
+  }
 
-export async function createPayable(data) {
-  const newPayable = data.newPayable;
-  const id = data.id;
+  let request = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return request;
+}
+
+export async function createPayable(payable) {
+  const id = payable.id;
+  // If dont have an id, is creating a new payable
   const hasId = !!id;
+  const newApiUrl = hasId ? `${apiUrl}/${id}` : apiUrl;
+
   try {
-    const newApiUrl = hasId ? `${apiUrl}/${id}` : apiUrl;
     const request = hasId
-      ? await patchJWT(newPayable)
-      : await postJWT(newPayable);
+      ? await patchJWT(payable.newPayable)
+      : await postJWT(payable);
     const response = await fetch(newApiUrl, request);
     const data = await response.json();
 
@@ -79,6 +94,22 @@ export async function getPayables() {
   try {
     const request = await getJWT();
     const response = await fetch(apiUrl, request);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error getting payables:", error.message);
+    throw error; // Rethrow the error after logging it.
+  }
+}
+
+export async function deletePayable(id) {
+  const newApiUrl = `${apiUrl}/${id}`;
+  try {
+    const request = await deleteJWT();
+    const response = await fetch(newApiUrl, request);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);

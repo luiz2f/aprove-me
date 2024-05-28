@@ -1,18 +1,15 @@
 import styled from "styled-components";
-import Table from "../../ui/Table";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { HiEye, HiTrash } from "react-icons/hi2";
 import { numberToBRL } from "../../utils/numberToBRL";
 import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
+import EditPayable from "./EditPayable";
+import Table from "../../ui/Table";
 import Modal from "../../ui/Modal";
 import Menus from "../../ui/Menu";
-import {
-  HiArrowDownOnSquare,
-  HiArrowUpOnSquare,
-  HiEye,
-  HiTrash,
-} from "react-icons/hi2";
-import { useNavigate, useParams } from "react-router-dom";
-import EditPayable from "./EditPayable";
-import { useEffect, useState } from "react";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import { useDeletePayable } from "./useDeletePayable";
 
 const ID = styled.div`
   font-size: 1rem;
@@ -67,6 +64,7 @@ function PayableRow({ payable }: PayableRowProps) {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const { id } = useParams();
+  const { deletePayable, isDeleting, error } = useDeletePayable();
 
   const handleGoToPayable = () => {
     setModalOpen(true);
@@ -101,18 +99,24 @@ function PayableRow({ payable }: PayableRowProps) {
             <Menus.Btn icon={<HiEye />} onClick={() => handleGoToPayable()}>
               Visualizar
             </Menus.Btn>
-
-            <Modal.Open opens="delete">
-              <Menus.Btn icon={<HiTrash />}>Apagar</Menus.Btn>
+            <Modal.Open opens={`recebivel${payableId}`}>
+              <Menus.Btn
+                onClick={() => {
+                  console.log("bick");
+                }}
+                icon={<HiTrash />}
+              >
+                Apagar
+              </Menus.Btn>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
-        <Modal.Window name="delete">
-          {/* <ConfirmDelete
-            resourceName={`booking #${bookingId} from ${guestName} `}
-            onConfirm={() => deleteBooking(bookingId)}
+        <Modal.Window name={`recebivel${payableId}`}>
+          <ConfirmDelete
+            resourceName={`recebível: ${payableId}`}
+            onConfirm={() => deletePayable(payableId)}
             disabled={isDeleting}
-          /> */}
+          />
         </Modal.Window>
       </Table.Row>
       {modalOpen && (

@@ -70,6 +70,19 @@ export const Button = styled.button`
     `
     width: 100%;
   `}
+    ${(props) =>
+    props.disabled &&
+    css`
+      cursor: not-allowed;
+      background-color: #e7e7e7;
+      color: #888;
+      &:hover {
+        background-color: #a1a1a1;
+      }
+      &:active {
+        background-color: #a1a1a1;
+      }
+    `}
 `;
 Button.defaultProps = {
   type: "primary",

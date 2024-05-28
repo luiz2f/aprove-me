@@ -93,7 +93,10 @@ export class AssignorRepository {
       }
       const documentAlreadyExist =
         await this.databaseService.assignor.findUnique({
-          where: { document },
+          where: {
+            document,
+            NOT: { id }, // Ignora o item atual da checagem de documento duplicado
+          },
         });
       if (documentAlreadyExist) {
         errors.push('Document is already in use');
@@ -101,8 +104,8 @@ export class AssignorRepository {
     }
 
     if (email) {
-      const emailAlreadyExist = await this.databaseService.assignor.findUnique({
-        where: { email },
+      const emailAlreadyExist = await this.databaseService.assignor.findFirst({
+        where: { email, NOT: { id } }, // Ignora o item atual da checagem de email duplicado
       });
       if (emailAlreadyExist) {
         errors.push('Email is already in use');

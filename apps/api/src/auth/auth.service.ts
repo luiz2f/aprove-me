@@ -21,4 +21,7 @@ export class AuthService {
   async validate(payload: JwtPayload): Promise<User> {
     return await this.authRepository.validate(payload);
   }
+  // async findMany(): Promise<User[]> {
+  //   return await this.authRepository.findMany();
+  // }
 }

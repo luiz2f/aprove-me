@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPayable as createPayableApi } from "../../services/apiPayables";
+import { deletePayable as deletePayableApi } from "../../services/apiPayables";
 
-export function useCreatePayable() {
+export function useDeletePayable() {
   const queryClient = useQueryClient();
 
   const {
-    mutate: createPayable,
-    isPending: isCreating,
+    mutate: deletePayable,
+    isPending: isDeleting,
     error,
   } = useMutation({
-    mutationFn: createPayableApi,
+    mutationFn: deletePayableApi,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["payable"],
@@ -20,5 +20,5 @@ export function useCreatePayable() {
     },
   });
 
-  return { createPayable, isCreating, error };
+  return { deletePayable, isDeleting, error };
 }

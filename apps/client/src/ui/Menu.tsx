@@ -40,8 +40,8 @@ const StyledList = styled.ul`
   box-shadow: var(--shadow-md);
   border-radius: 8px;
 
-  right: ${(props) => props.position.x}px;
-  top: ${(props) => props.position.y}px;
+  right: ${(props) => props.$position.x}px;
+  top: ${(props) => props.$position.y}px;
   & li:first-child button {
     border-radius: 8px 8px 0 0;
   }
@@ -115,7 +115,7 @@ function List({ id, children }) {
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList position={position} ref={ref}>
+    <StyledList $position={position} ref={ref}>
       {children}
     </StyledList>,
     document.body
@@ -123,7 +123,8 @@ function List({ id, children }) {
 }
 function Btn({ children, icon, onClick }) {
   const { close } = useContext(MenusContext);
-  function handleClick() {
+  function handleClick(event) {
+    event.stopPropagation(); // Impede a propagação do evento de clique para elementos pai
     onClick?.();
     close();
   }

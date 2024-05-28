@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import LoginSignup from "./pages/LoginSignup";
+import LoginSignup from "./features/authentication/LoginSignup";
 import AppLayout from "./ui/AppLayout";
 import Payables from "./features/payable/Payables";
 import Assignors from "./features/assignor/Assignors";
@@ -9,6 +9,7 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 import PageNotFound from "./ui/PageNotFound";
 import EditPayable from "./features/payable/EditPayable";
 import { Toaster } from "react-hot-toast";
+import EditAssignor from "./features/assignor/EditAssignor";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,7 +34,7 @@ function App() {
               <Route path=":id" element={<EditPayable />}></Route>
             </Route>
             <Route path="cedentes" element={<Assignors />}>
-              {/* <Route path=":id" element={}></Route> */}
+              <Route path=":id" element={<EditAssignor />}></Route>
             </Route>
           </Route>
 

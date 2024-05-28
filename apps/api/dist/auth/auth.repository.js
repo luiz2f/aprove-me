@@ -44,7 +44,7 @@ let AuthRepository = class AuthRepository {
         const user = await this.databaseService.user.findUnique({
             where: { login },
         });
-        if (login === 'aproveme' && password === 'aproveme') {
+        if (user && (await bcrypt.compare(password, user.password))) {
             const payload = { login };
             const accessToken = await this.jwtService.sign(payload);
             delete authCredentialsDto.password;

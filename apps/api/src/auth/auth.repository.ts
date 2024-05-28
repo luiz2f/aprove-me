@@ -46,7 +46,7 @@ export class AuthRepository {
       where: { login },
     });
 
-    if (login === 'aproveme' && password === 'aproveme') {
+    if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { login };
       const accessToken = await this.jwtService.sign(payload);
       delete authCredentialsDto.password;
@@ -70,4 +70,7 @@ export class AuthRepository {
 
     return user;
   }
+  // async findMany(): Promise<User[]> {
+  //   return await this.databaseService.user.findMany();
+  // }
 }

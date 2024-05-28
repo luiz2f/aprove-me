@@ -10,12 +10,16 @@ function post(data) {
   };
   return request;
 }
+export async function signUp(credentials) {
+  const response = await fetch(`${apiUrl}/signup`, post(credentials));
+  if (!response.ok) {
+    const data = await response.json();
+    throw data.message;
+  }
 
-export async function login() {
-  const data = {
-    login: "aproveme",
-    password: "aproveme",
-  };
+  return;
+}
+export async function login(data) {
   const response = await fetch(`${apiUrl}/signin`, post(data));
 
   if (!response.ok) {

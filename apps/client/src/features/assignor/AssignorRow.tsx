@@ -1,6 +1,14 @@
 import styled from "styled-components";
-import Table from "../../ui/Table.js";
+import { HiEye, HiTrash } from "react-icons/hi2";
 import { formatPhoneNumber } from "../../utils/formatPhoneNumber";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDeleteAssignor } from "./useDeleteAssignor";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Table from "../../ui/Table";
+import Modal from "../../ui/Modal";
+import Menus from "../../ui/Menu";
+import EditAssignor from "./EditAssignor";
 
 const ID = styled.div`
   font-size: 1rem;
@@ -39,59 +47,73 @@ interface AssignorRowProps {
 }
 
 function AssignorRow({ assignor }: AssignorRowProps) {
-  const { id, document, name, phone, email } = assignor;
-  return (
-    <Table.Row>
-      <ID>{id}</ID>
-      <ID>{name}</ID>
-      <ID>{document}</ID>
-      <Stacked>
-        <span>{formatPhoneNumber(phone)}</span>
-        <span>{email}</span>
-      </Stacked>
+  const { id: assignorId, document, name, phone, email } = assignor;
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const { id } = useParams();
+  // CRIAR FUNÇÃO
+  const { deleteAssignor, isDeleting, error } = useDeleteAssignor();
 
-      <div>s</div>
-      {/* <Modal>
+  const handleGoToAssignor = () => {
+    setModalOpen(true);
+    navigate(`/cedentes/${assignorId}`);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    navigate("/cedentes");
+  };
+
+  useEffect(() => {
+    if (id === assignorId) {
+      setModalOpen(true);
+    }
+    if (!id) {
+      setModalOpen(false);
+    }
+  }, [id, assignorId]);
+
+  return (
+    <>
+      <Table.Row onClick={() => handleGoToAssignor()}>
+        <ID>{assignorId}</ID>
+        <ID>{name}</ID>
+        <ID>{document}</ID>
+        <Stacked>
+          <span>{formatPhoneNumber(phone)}</span>
+          <span>{email}</span>
+        </Stacked>
+
         <Menus.Menu>
-          <Menus.Toogle id={bookingId} />
-          <Menus.List id={bookingId}>
-            <Menus.Button
-              icon={<HiEye />}
-              onClick={() => navigate(`/bookings/${bookingId}`)}
-            >
-              See details
-            </Menus.Button>
-            {status === "unconfirmed" && (
-              <Menus.Button
-                icon={<HiArrowDownOnSquare />}
-                onClick={() => navigate(`/checkin/${bookingId}`)}
+          <Menus.Toogle id={assignorId} />
+          <Menus.List id={assignorId}>
+            <Menus.Btn icon={<HiEye />} onClick={() => handleGoToAssignor()}>
+              Visualizar
+            </Menus.Btn>
+            <Modal.Open opens={`cedente${assignorId}`}>
+              <Menus.Btn
+                onClick={() => {
+                  console.log("bick");
+                }}
+                icon={<HiTrash />}
               >
-                Check in
-              </Menus.Button>
-            )}
-            {status === "checked-in" && (
-              <Menus.Button
-                icon={<HiArrowUpOnSquare />}
-                onClick={() => checkout(bookingId)}
-                disabled={isCheckingOut}
-              >
-                Check Out
-              </Menus.Button>
-            )}
-            <Modal.Open opens="delete">
-              <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+                Apagar
+              </Menus.Btn>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
-        <Modal.Window name="delete">
+        <Modal.Window name={`cedente${assignorId}`}>
           <ConfirmDelete
-            resourceName={`booking #${bookingId} from ${guestName} `}
-            onConfirm={() => deleteBooking(bookingId)}
+            resourceName={`cedente: ${assignorId}`}
+            onConfirm={() => deleteAssignor(assignorId)}
             disabled={isDeleting}
           />
         </Modal.Window>
-      </Modal> */}
-    </Table.Row>
+      </Table.Row>
+      {modalOpen && (
+        <EditAssignor assignor={assignor} onClose={handleModalClose} />
+      )}
+    </>
   );
 }
 

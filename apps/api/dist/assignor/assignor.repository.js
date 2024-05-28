@@ -78,15 +78,18 @@ let AssignorRepository = class AssignorRepository {
                 throw new common_1.BadRequestException(`${document} is not a valid document`);
             }
             const documentAlreadyExist = await this.databaseService.assignor.findUnique({
-                where: { document },
+                where: {
+                    document,
+                    NOT: { id },
+                },
             });
             if (documentAlreadyExist) {
                 errors.push('Document is already in use');
             }
         }
         if (email) {
-            const emailAlreadyExist = await this.databaseService.assignor.findUnique({
-                where: { email },
+            const emailAlreadyExist = await this.databaseService.assignor.findFirst({
+                where: { email, NOT: { id } },
             });
             if (emailAlreadyExist) {
                 errors.push('Email is already in use');

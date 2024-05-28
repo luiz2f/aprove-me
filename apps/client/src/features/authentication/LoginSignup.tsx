@@ -1,7 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-import logoBankme from "../assets/logo-bankme.png";
-import { useLogin } from "../features/authentication/useLogin";
+import logoBankme from "../../assets/logo-bankme.png";
+import { useLogin } from "./useLogin";
+import { useForm } from "react-hook-form";
+import SignUpForm from "./SignUpForm";
+import LoginForm from "./LoginForm";
 const StyledBackground = styled.div`
   width: 100%;
   height: 100vh;
@@ -128,56 +131,33 @@ const Slider = styled.div`
   }
 `;
 
-function LoginSignup() {
+function LoginSignUp() {
   const [typeLogin, setTypeLogin] = useState(true);
 
-  const { login, isPending } = useLogin();
-
-  function handleLogin(e) {
-    e.preventDefault();
-    login();
+  function tabIndex(type) {
+    if (type) {
+      return 0;
+    } else {
+      return -1;
+    }
   }
 
   return (
     <StyledBackground>
       <StyledLoginBox className={typeLogin ? "" : "slide"}>
         <Slider>
-          <LogSigBox>
-            <StyledLogoHolder>
-              <StyledLogoImg src={logoBankme} alt="Logo Bankme" />
-            </StyledLogoHolder>
-            <StyledSectionTitle>Login</StyledSectionTitle>
-            <StyledSectionText>
-              Gestão de Cedentes e Recebíveis
-            </StyledSectionText>
-            <form>
-              <StyledInput placeholder="Usuário"></StyledInput>
-              <StyledInput placeholder="Senha" type="password"></StyledInput>
-              <StyledButton onClick={(e) => handleLogin(e)}>Login</StyledButton>
-            </form>
-            <StyledLink onClick={() => setTypeLogin((typeLogin) => !typeLogin)}>
-              Criar uma conta
-            </StyledLink>
-          </LogSigBox>
-          <LogSigBox className="signup">
-            <StyledLogoHolder>
-              <StyledLogoImg src={logoBankme} alt="Logo Bankme" />
-            </StyledLogoHolder>
-            <StyledSectionTitle>Cadastro</StyledSectionTitle>
-            <StyledSectionText>
-              Gestão de Cedentes e Recebíveis
-            </StyledSectionText>
-            <StyledInput placeholder="Novo Usuário"></StyledInput>
-            <StyledInput placeholder="Senha" type="password"></StyledInput>
-            <StyledButton>Cadastrar Usuário</StyledButton>
-            <StyledLink onClick={() => setTypeLogin((typeLogin) => !typeLogin)}>
-              Já tenho uma conta
-            </StyledLink>
-          </LogSigBox>
+          <LoginForm
+            typeIndex={tabIndex(typeLogin)}
+            setTypeLogin={setTypeLogin}
+          />
+          <SignUpForm
+            typeIndex={tabIndex(!typeLogin)}
+            setTypeLogin={setTypeLogin}
+          />
         </Slider>
       </StyledLoginBox>
     </StyledBackground>
   );
 }
 
-export default LoginSignup;
+export default LoginSignUp;

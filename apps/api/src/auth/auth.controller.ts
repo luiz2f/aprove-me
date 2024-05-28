@@ -15,9 +15,10 @@ export class AuthController {
   create(@Body() authCredentialsDto: AuthCredentialsDto): Promise<object> {
     return this.authService.signIn(authCredentialsDto);
   }
-  @Get('')
-  @UseGuards(AuthGuard('jwt'))
-  get(): object {
-    return { message: 'Authorized' };
-  }
+  // @Get('/users')
+  // @UseGuards(AuthGuard('jwt'))
+  // get(): object {
+  //   return this.authService.findMany();
+  //   return { message: 'Authorized' };
+  // }
 }

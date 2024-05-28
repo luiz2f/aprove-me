@@ -15,6 +15,8 @@ import { IconButton } from "../../ui/IconButton";
 import toast from "react-hot-toast";
 
 const StyledCreatePayable = styled.div`
+  box-shadow: 0 0 20px #00000012;
+
   max-width: 400px;
   height: fit-content;
   color: #333;
@@ -55,7 +57,6 @@ export default function CreatePayableForm() {
 
   function calendarShowPicker(e) {
     e?.target?.showPicker();
-    console.log(e.target);
   }
 
   function onSubmit(data) {

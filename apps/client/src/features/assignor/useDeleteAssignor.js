@@ -1,25 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createAssignor as createAssignorApi } from "../../services/apiAssignors";
+import { deleteAssignor as deleteAssignorApi } from "../../services/apiAssignors";
 
-export function useCreateAssignor() {
+export function useDeleteAssignor() {
   const queryClient = useQueryClient();
 
   const {
-    mutate: createAssignor,
-    isPending: isCreating,
+    mutate: deleteAssignor,
+    isPending: isDeleting,
     error,
   } = useMutation({
-    // Redundante?
-    mutationFn: createAssignorApi,
+    mutationFn: deleteAssignorApi,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["assignor"],
       });
     },
     onError: (err) => {
-      console.log(err);
+      console.log("ERROR", err.message);
     },
   });
 
-  return { createAssignor, isCreating, error };
+  return { deleteAssignor, isDeleting, error };
 }
