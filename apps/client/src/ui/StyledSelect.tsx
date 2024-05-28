@@ -7,6 +7,7 @@ const Select = styled.select`
   background-color: #fff;
   border-radius: 8px;
   padding: 14px 18px;
+  padding-right: 28px;
   -webkit-appearance: none;
   appearance: none;
   position: relative;
@@ -29,7 +30,7 @@ const Chevron = styled.div`
   font-size: 14px; /* Adjust size as needed */
   position: absolute;
   top: 50%;
-  right: 18px;
+  right: 12px;
   color: #333;
   pointer-events: none;
   z-index: 2;

@@ -15,8 +15,8 @@ const StyledToggle = styled.button`
   background: none;
   border: none;
   padding: 4px;
+  padding-bottom: 0;
   border-radius: 8px;
-  transform: translateX(8px);
   transition: all 0.2s;
   cursor: pointer;
   border: 1px solid transparent;

@@ -9,17 +9,11 @@ import { useAssignors } from "../assignor/useAssignors";
 import { Info } from "../../ui/InfoDetails";
 import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
 import { HiOutlineXMark } from "react-icons/hi2";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { StyledModal } from "../../ui/StyledModal";
+import { IconButton } from "../../ui/IconButton";
+import toast from "react-hot-toast";
 
-const StyledModal = styled.div`
-  z-index: 2;
-  position: absolute;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(2px);
-  top: 0;
-  margin: auto 0;
-`;
 const StyledCreatePayable = styled.div`
   height: fit-content;
   color: #333;
@@ -52,52 +46,46 @@ const Flex = styled.div`
   justify-content: space-between;
   margin-bottom: 28px;
 `;
-const IconButton = styled.button`
-  color: #555;
-  background-color: transparent;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 6px 3px 6px;
-  transition: all 200ms;
-  cursor: pointer;
-  &:hover {
-    color: #0a36b0;
-  }
-  & svg {
-    font-size: 20px;
-  }
-`;
 
-export default function PayableDetails({ payable, onClose }) {
+export default function EditPayable({ payable, onClose }) {
   const { id, value, emissionDate, assignorId, createdAt, updatedAt } = payable;
   const { register, handleSubmit, reset, formState } = useForm({
     defaultValues: {
       value,
-      emissionDate,
+      emissionDate: ISOtoStringDate(emissionDate, true),
       assignorId,
     },
   });
   const { errors } = formState;
   const { createPayable, isCreating } = useCreatePayable();
   const { assignors } = useAssignors();
+  const ref = useOutsideClick(onClose);
 
   function calendarShowPicker(e) {
     e?.target?.showPicker();
-    console.log(e.target);
   }
   function onSubmit(data) {
-    const formattedData = {
+    const newPayable = {
       ...data,
       value: parseFloat(data.value),
       emissionDate: new Date(data.emissionDate).toISOString(),
     };
-
-    console.log(formattedData);
-    createPayable(formattedData, {
-      onSuccess: () => {
-        reset();
-      },
-    });
+    createPayable(
+      { newPayable, id },
+      {
+        onSuccess: (updatedPayable) => {
+          reset({
+            value: updatedPayable.value,
+            emissionDate: ISOtoStringDate(updatedPayable.emissionDate, true),
+            assignorId: updatedPayable.assignorId,
+          });
+          toast.success("Recebível atualizado com sucesso.");
+        },
+        onError: (error) => {
+          toast.error(`Erro: ${error.message}`);
+        },
+      }
+    );
   }
   function onError(error) {
     console.log(error, "sub");
@@ -105,9 +93,9 @@ export default function PayableDetails({ payable, onClose }) {
 
   return (
     <StyledModal>
-      <StyledCreatePayable>
+      <StyledCreatePayable ref={ref}>
         <Flex>
-          <StyledTitleCreatePayable>Recebível </StyledTitleCreatePayable>
+          <StyledTitleCreatePayable>Recebível</StyledTitleCreatePayable>
           <IconButton onClick={onClose}>
             <HiOutlineXMark />
           </IconButton>
@@ -130,7 +118,7 @@ export default function PayableDetails({ payable, onClose }) {
                 required: "Campo obrigatório",
               })}
             >
-              <option value="">Selecione uma cedente</option>
+              <option value={assignorId}>{assignorId}</option>
               {assignors?.map((assignor) => {
                 return (
                   <option key={assignor.id} value={assignor.id}>
@@ -167,7 +155,6 @@ export default function PayableDetails({ payable, onClose }) {
               id="emissionDate"
               onClick={(e) => calendarShowPicker(e)}
               onFocus={(e) => calendarShowPicker(e)}
-              autoComplete="username"
               {...register("emissionDate", {
                 required: "Campo obrigatório",
               })}

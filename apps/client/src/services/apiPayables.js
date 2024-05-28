@@ -18,7 +18,6 @@ async function postJWT(data) {
   };
   return request;
 }
-
 async function getJWT() {
   const token = getToken();
   if (!token) {
@@ -33,17 +32,39 @@ async function getJWT() {
   };
   return config;
 }
+async function patchJWT(data) {
+  const token = getToken();
+  if (!token) {
+    throw new Error("No token found");
+  }
 
-export async function createPayable(newPayable) {
+  let request = {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+  return request;
+}
+
+export async function createPayable(data) {
+  const newPayable = data.newPayable;
+  const id = data.id;
+  const hasId = !!id;
   try {
-    const request = await postJWT(newPayable);
-    const response = await fetch(apiUrl, request);
+    const newApiUrl = hasId ? `${apiUrl}/${id}` : apiUrl;
+    const request = hasId
+      ? await patchJWT(newPayable)
+      : await postJWT(newPayable);
+    const response = await fetch(newApiUrl, request);
     const data = await response.json();
 
     if (!response.ok) {
       throw data;
     }
-
+    console.log(data);
     return data;
   } catch (error) {
     // Se for um objeto de erro conhecido, lance-o como está

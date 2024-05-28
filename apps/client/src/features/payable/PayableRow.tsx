@@ -11,7 +11,7 @@ import {
   HiTrash,
 } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
-import PayableDetails from "./PayablesDetails";
+import EditPayable from "./EditPayable";
 import { useEffect, useState } from "react";
 
 const ID = styled.div`
@@ -82,10 +82,13 @@ function PayableRow({ payable }: PayableRowProps) {
     if (id === payableId) {
       setModalOpen(true);
     }
+    if (!id) {
+      setModalOpen(false);
+    }
   }, [id, payableId]);
 
   return (
-    <Modal>
+    <>
       <Table.Row onClick={() => handleGoToPayable()}>
         <ID>{payableId}</ID>
 
@@ -100,7 +103,7 @@ function PayableRow({ payable }: PayableRowProps) {
             </Menus.Btn>
 
             <Modal.Open opens="delete">
-              <Menus.Btn icon={<HiTrash />}>Delete</Menus.Btn>
+              <Menus.Btn icon={<HiTrash />}>Apagar</Menus.Btn>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
@@ -112,10 +115,10 @@ function PayableRow({ payable }: PayableRowProps) {
           /> */}
         </Modal.Window>
       </Table.Row>
-      {(modalOpen || id) && (
-        <PayableDetails payable={payable} onClose={handleModalClose} />
+      {modalOpen && (
+        <EditPayable payable={payable} onClose={handleModalClose} />
       )}
-    </Modal>
+    </>
   );
 }
 

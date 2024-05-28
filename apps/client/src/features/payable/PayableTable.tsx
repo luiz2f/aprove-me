@@ -15,12 +15,12 @@ function PayableTable() {
   }
   return (
     <Menus>
-      <Table $columns="2fr 1fr 1fr 10px">
+      <Table $columns="2fr 1fr 1fr 34px">
         <Table.Header>
           <StyledCenter>ID do Recebível</StyledCenter>
           <StyledCenter>Valor</StyledCenter>
           <StyledCenter>Emissão</StyledCenter>
-          <div>a</div>
+          <div></div>
         </Table.Header>
         <div>
           {payables ? (

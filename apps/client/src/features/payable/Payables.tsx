@@ -3,6 +3,8 @@ import PayableTable from "./PayableTable";
 import { Button } from "../../ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import Modal from "../../ui/Modal";
+import CreatePayableForm from "./CreatePayableForm";
 
 const Active = styled.div`
   color: #333;
@@ -37,17 +39,24 @@ function Payables() {
 
   return (
     <>
-      <Padding>
-        {/* <CreatePayableForm /> */}
-        <Flex>
-          <Active>Recebíveis </Active>
-          {/* <SearchBar>
+      <Modal>
+        <Padding>
+          {/* <CreatePayableForm /> */}
+          <Flex>
+            <Active>Recebíveis </Active>
+            {/* <SearchBar>
           <SearchBarInput></SearchBarInput>
         </SearchBar> */}
-          <Button>Criar novo</Button>
-        </Flex>
-        <PayableTable />
-      </Padding>
+            <Modal.Open opens="createPayable">
+              <Button onClick={() => navigate("new")}>Criar novo</Button>
+            </Modal.Open>
+          </Flex>
+          <PayableTable />
+        </Padding>
+        <Modal.Window name="createPayable">
+          <CreatePayableForm />
+        </Modal.Window>
+      </Modal>
     </>
   );
 }

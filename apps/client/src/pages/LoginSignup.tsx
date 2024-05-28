@@ -150,13 +150,13 @@ function LoginSignup() {
             <StyledSectionText>
               Gestão de Cedentes e Recebíveis
             </StyledSectionText>
-            {/* form */}
-            <StyledInput placeholder="Usuário"></StyledInput>
-            <StyledInput placeholder="Senha" type="password"></StyledInput>
-            <StyledButton onClick={(e) => handleLogin(e)}>Login</StyledButton>
-            {/* form */}
+            <form>
+              <StyledInput placeholder="Usuário"></StyledInput>
+              <StyledInput placeholder="Senha" type="password"></StyledInput>
+              <StyledButton onClick={(e) => handleLogin(e)}>Login</StyledButton>
+            </form>
             <StyledLink onClick={() => setTypeLogin((typeLogin) => !typeLogin)}>
-              {isPending}{" "}
+              Criar uma conta
             </StyledLink>
           </LogSigBox>
           <LogSigBox className="signup">

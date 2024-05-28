@@ -9,7 +9,7 @@ export function useCreatePayable() {
     isPending: isCreating,
     error,
   } = useMutation({
-    mutationFn: createPayableApi,
+    mutationFn: (data) => createPayableApi(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["payable"],
