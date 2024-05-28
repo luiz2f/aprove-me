@@ -65,7 +65,6 @@ export default function CreatePayableForm() {
       emissionDate: new Date(data.emissionDate).toISOString(),
     };
 
-    console.log(formattedData);
     createPayable(formattedData, {
       onSuccess: () => {
         reset();

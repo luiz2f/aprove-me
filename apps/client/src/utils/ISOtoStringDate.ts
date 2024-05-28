@@ -1,9 +1,10 @@
 export function ISOtoStringDate(date: string, input: boolean = false) {
-  const formattedDate = new Date(date);
+  const newDate = new Date(date);
 
-  const day = formattedDate.getDate();
-  const month = formattedDate.getMonth() + 1;
-  const year = formattedDate.getFullYear();
+  // Extrair os componentes da data no fuso horário UTC
+  const day = newDate.getUTCDate();
+  const month = newDate.getUTCMonth() + 1; // months are zero-indexed
+  const year = newDate.getUTCFullYear();
 
   if (input) {
     return `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
