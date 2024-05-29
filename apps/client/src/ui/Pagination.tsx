@@ -156,7 +156,7 @@ function Pagination({ count }) {
             ) : (
               <PaginationButton
                 key={index}
-                active={page === currentPage}
+                $active={page === currentPage ? "yes" : ""}
                 onClick={() => typeof page === "number" && goToPage(page)}
               >
                 {page}

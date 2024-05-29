@@ -1,4 +1,6 @@
+import { useActionData } from "react-router-dom";
 import { getToken } from "./apiAuth";
+import { MutationCache, QueryClient } from "@tanstack/react-query";
 
 const apiUrl = "http://localhost:3000/api/integrations/payable";
 
@@ -77,7 +79,7 @@ export async function createPayable(payable) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw data;
+      throw new Error(data.statusCode);
     }
     console.log(data);
     return data;
@@ -96,7 +98,7 @@ export async function getPayables() {
     const response = await fetch(apiUrl, request);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new Error(`getPayables HTTP error! Status: ${response.status}`);
     }
     return await response.json();
   } catch (error) {
@@ -112,11 +114,14 @@ export async function deletePayable(id) {
     const response = await fetch(newApiUrl, request);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const queryClient = new QueryClient();
+
+      queryClient.invalidateQueries();
+      throw new Error(`deletePayable HTTP error! Status: ${response.status}`);
     }
     return await response.json();
   } catch (error) {
-    console.error("Error getting payables:", error.message);
+    console.error("Error deleting payables:", error.message);
     throw error; // Rethrow the error after logging it.
   }
 }

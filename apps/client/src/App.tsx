@@ -16,6 +16,7 @@ const queryClient = new QueryClient({
     queries: { staleTime: 60 * 1000 },
   },
 });
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

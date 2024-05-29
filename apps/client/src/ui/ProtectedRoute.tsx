@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { useAuth } from "../features/authentication/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
+import { useQueryClient } from "@tanstack/react-query";
 const FullPage = styled.div`
   height: 100vh;
   background-color: #f8fafc;
@@ -12,10 +13,18 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ children }) {
+  const [updateToken, setUpdateToken] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUpdateToken((prev) => !prev);
+    }, 60 * 1000); // refetch a cada 10 segundos
+
+    return () => clearInterval(interval);
+  }, []);
+
   const { isAuth, isPending } = useAuth();
-  console.log(isAuth);
   useEffect(() => {
     if (!isAuth && !isPending) {
       navigate("/login");

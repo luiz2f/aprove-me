@@ -46,7 +46,7 @@ export function getToken() {
 export async function validateUser() {
   const token = getToken();
   if (!token) {
-    throw new Error("Please login");
+    return { auth: false };
   }
 
   try {

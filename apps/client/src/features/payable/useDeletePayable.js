@@ -16,6 +16,8 @@ export function useDeletePayable() {
       });
     },
     onError: (err) => {
+      console.log(error.code);
+
       console.log("ERROR", err.message);
     },
   });

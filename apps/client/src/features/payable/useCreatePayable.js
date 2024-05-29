@@ -16,6 +16,8 @@ export function useCreatePayable() {
       });
     },
     onError: (err) => {
+      console.log(err.code);
+      console.log(error);
       console.log("ERROR", err.message);
     },
   });
