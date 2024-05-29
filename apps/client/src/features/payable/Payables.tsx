@@ -2,7 +2,7 @@ import styled from "styled-components";
 import PayableTable from "./PayableTable";
 import { Button } from "../../ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../ui/Modal";
 import CreatePayableForm from "./CreatePayableForm";
 

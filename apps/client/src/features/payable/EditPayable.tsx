@@ -14,6 +14,7 @@ import Input from "../../ui/Input";
 import StyledSelect from "../../ui/StyledSelect";
 import FormRow from "../../ui/FormRow";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const StyledCreatePayable = styled.div`
   box-shadow: 0 0 20px #00000012;
@@ -62,19 +63,32 @@ const StyledButton = styled.button`
 
 export default function EditPayable({ payable, onClose }) {
   const { id, value, emissionDate, assignorId, createdAt, updatedAt } = payable;
-  const { register, handleSubmit, reset, formState } = useForm({
+  const { register, handleSubmit, reset, formState, getValues } = useForm({
     defaultValues: {
       value,
       emissionDate: ISOtoStringDate(emissionDate, true),
       assignorId,
     },
   });
+  const [hasChanges, setHasChanges] = useState(true);
+  console.log("test");
   const navigate = useNavigate();
   const { errors } = formState;
   const { createPayable, isCreating } = useCreatePayable();
   const { assignors } = useAssignors();
   const ref = useOutsideClick(onClose);
 
+  function checkChange() {
+    const newPayable = {
+      value: getValues("value"),
+      emissionDate: new Date(getValues("emissionDate")).toISOString(),
+      assignorId: getValues("assignorId"),
+    };
+    const isChanged = Object.keys(newPayable).some(
+      (key) => newPayable[key] !== payable[key]
+    );
+    setHasChanges(!isChanged);
+  }
   function calendarShowPicker(e) {
     e?.target?.showPicker();
   }
@@ -88,12 +102,9 @@ export default function EditPayable({ payable, onClose }) {
       { newPayable, id },
       {
         onSuccess: (updatedPayable) => {
-          reset({
-            value: updatedPayable.value,
-            emissionDate: ISOtoStringDate(updatedPayable.emissionDate, true),
-            assignorId: updatedPayable.assignorId,
-          });
+          reset(data);
           toast.success("Recebível atualizado com sucesso.");
+          setHasChanges(true);
         },
         onError: (error) => {
           toast.error(`Erro: ${error.message}`);
@@ -121,7 +132,7 @@ export default function EditPayable({ payable, onClose }) {
             {ISOtoStringDate(updatedAt)}
           </Info>
         </Grid2C>
-        <Form onSubmit={handleSubmit(onSubmit, onError)}>
+        <Form onSubmit={handleSubmit(onSubmit, onError)} onChange={checkChange}>
           <FormRow label="ID do Cedente" error={errors?.assignorId?.message}>
             <div id="assignorId">
               <StyledSelect
@@ -183,7 +194,12 @@ export default function EditPayable({ payable, onClose }) {
             />
           </FormRow>
           <StyledButtonBox>
-            <Button type="submit" size="large" $widthohp="true">
+            <Button
+              disabled={hasChanges}
+              type="submit"
+              size="large"
+              $widthohp="true"
+            >
               Atualizar Recebível
             </Button>
           </StyledButtonBox>

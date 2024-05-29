@@ -6,6 +6,7 @@ export function useAuth() {
     queryKey: ["user"],
     queryFn: validateUser,
   });
+
   const isAuth = auth?.auth ? true : false;
   return { isAuth, isPending };
 }

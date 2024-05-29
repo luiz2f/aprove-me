@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { HiEye, HiTrash } from "react-icons/hi2";
 import { numberToBRL } from "../../utils/numberToBRL";
 import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
@@ -65,15 +65,13 @@ function PayableRow({ payable }: PayableRowProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { id } = useParams();
   const { deletePayable, isDeleting, error } = useDeletePayable();
+  const [searchParams] = useSearchParams();
+
+  const page = searchParams.get("page") || 1;
 
   const handleGoToPayable = () => {
-    setModalOpen(true);
-    navigate(`/recebiveis/${payableId}`);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    navigate("/recebiveis");
+    // navigate(`/recebiveis/${payableId}`);
+    navigate(`/recebiveis/${payableId}?page=${page}`);
   };
 
   useEffect(() => {
@@ -119,9 +117,6 @@ function PayableRow({ payable }: PayableRowProps) {
           />
         </Modal.Window>
       </Table.Row>
-      {modalOpen && (
-        <EditPayable payable={payable} onClose={handleModalClose} />
-      )}
     </>
   );
 }

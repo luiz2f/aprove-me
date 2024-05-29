@@ -15,7 +15,7 @@ function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
   const { isAuth, isPending } = useAuth();
-
+  console.log(isAuth);
   useEffect(() => {
     if (!isAuth && !isPending) {
       navigate("/login");

@@ -52,8 +52,6 @@ const Grid2C = styled.form`
 `;
 
 export default function EditAssignor({ assignor, onClose }) {
-  const [key, setKey] = useState(0); // Estado para controlar a chave do componente
-
   const { id, document, name, phone, email, createdAt, updatedAt } = assignor;
   const { register, handleSubmit, reset, formState, getValues, setError } =
     useForm({
@@ -69,7 +67,6 @@ export default function EditAssignor({ assignor, onClose }) {
   const { errorFlags, resetErrorFlags } = useErrorHandling(errorsApi?.message);
   const ref = useOutsideClick(onClose);
   const [hasChanges, setHasChanges] = useState(true);
-  const currentValues = getValues();
 
   function checkChange() {
     const newAssignor = {
@@ -128,7 +125,7 @@ export default function EditAssignor({ assignor, onClose }) {
   // COLOCAR CPF CNPJ
 
   return (
-    <StyledModal key={key}>
+    <StyledModal>
       <StyledCreateAssignor ref={ref}>
         <Flex>
           <StyledTitleCreateAssignor>Editar cedente</StyledTitleCreateAssignor>

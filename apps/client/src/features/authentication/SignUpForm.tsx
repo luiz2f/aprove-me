@@ -185,7 +185,6 @@ function SignUpForm({ typeIndex, setTypeLogin }) {
       },
     });
   }
-  console.log(errorApi);
   function onError(error) {
     console.log(error, "sub");
   }
