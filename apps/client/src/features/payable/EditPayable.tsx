@@ -13,6 +13,7 @@ import { IconButton } from "../../ui/IconButton";
 import Input from "../../ui/Input";
 import StyledSelect from "../../ui/StyledSelect";
 import FormRow from "../../ui/FormRow";
+import { useNavigate } from "react-router-dom";
 
 const StyledCreatePayable = styled.div`
   box-shadow: 0 0 20px #00000012;
@@ -48,6 +49,16 @@ const Flex = styled.div`
   justify-content: space-between;
   margin-bottom: 28px;
 `;
+const StyledButton = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 8px;
+  transform: translateY(-8px);
+  color: #0a36b0;
+  text-decoration: underline;
+`;
 
 export default function EditPayable({ payable, onClose }) {
   const { id, value, emissionDate, assignorId, createdAt, updatedAt } = payable;
@@ -58,6 +69,7 @@ export default function EditPayable({ payable, onClose }) {
       assignorId,
     },
   });
+  const navigate = useNavigate();
   const { errors } = formState;
   const { createPayable, isCreating } = useCreatePayable();
   const { assignors } = useAssignors();
@@ -111,25 +123,33 @@ export default function EditPayable({ payable, onClose }) {
         </Grid2C>
         <Form onSubmit={handleSubmit(onSubmit, onError)}>
           <FormRow label="ID do Cedente" error={errors?.assignorId?.message}>
-            <StyledSelect
-              $error={errors?.assignorId?.message}
-              disabled={isCreating}
-              type="text"
-              id="assignorId"
-              {...register("assignorId", {
-                required: "Campo obrigatório",
-              })}
-            >
-              <option value={assignorId}>{assignorId}</option>
-              {assignors?.map((assignor) => {
-                return (
-                  <option key={assignor.id} value={assignor.id}>
-                    {assignor.id}
-                  </option>
-                );
-              })}
-            </StyledSelect>
+            <div id="assignorId">
+              <StyledSelect
+                $error={errors?.assignorId?.message}
+                disabled={isCreating}
+                type="text"
+                id="assignorId"
+                {...register("assignorId", {
+                  required: "Campo obrigatório",
+                })}
+              >
+                <option value={assignorId}>{assignorId}</option>
+                {assignors?.map((assignor) => {
+                  return (
+                    <option key={assignor.id} value={assignor.id}>
+                      {assignor.id}
+                    </option>
+                  );
+                })}
+              </StyledSelect>
+            </div>
           </FormRow>
+          <StyledButton
+            type="button"
+            onClick={() => navigate(`/cedentes/${assignorId}`)}
+          >
+            Visualizar Cedente{" "}
+          </StyledButton>
 
           <FormRow label="Valor" error={errors?.value?.message}>
             <Input
