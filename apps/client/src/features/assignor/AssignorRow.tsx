@@ -1,14 +1,13 @@
 import styled from "styled-components";
 import { HiEye, HiTrash } from "react-icons/hi2";
 import { formatPhoneNumber } from "../../utils/formatPhoneNumber";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDeleteAssignor } from "./useDeleteAssignor";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Table from "../../ui/Table";
 import Modal from "../../ui/Modal";
 import Menus from "../../ui/Menu";
-import EditAssignor from "./EditAssignor";
 
 const ID = styled.div`
   font-size: 1rem;
@@ -49,29 +48,21 @@ interface AssignorRowProps {
 function AssignorRow({ assignor }: AssignorRowProps) {
   const { id: assignorId, document, name, phone, email } = assignor;
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
   const { id } = useParams();
-  // CRIAR FUNÇÃO
+  const [modalOpen, setModalOpen] = useState(false);
+  const [searchParams] = useSearchParams();
   const { deleteAssignor, isDeleting, error } = useDeleteAssignor();
+  const page = searchParams.get("page") || 1;
 
   const handleGoToAssignor = () => {
     setModalOpen(true);
-    navigate(`/cedentes/${assignorId}`);
+    navigate(`/cedentes/${assignorId}?page=${page}`);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
     navigate("/cedentes");
   };
-
-  useEffect(() => {
-    if (id === assignorId) {
-      setModalOpen(true);
-    }
-    if (!id) {
-      setModalOpen(false);
-    }
-  }, [id, assignorId]);
 
   return (
     <>
@@ -91,14 +82,7 @@ function AssignorRow({ assignor }: AssignorRowProps) {
               Visualizar
             </Menus.Btn>
             <Modal.Open opens={`cedente${assignorId}`}>
-              <Menus.Btn
-                onClick={() => {
-                  console.log("bick");
-                }}
-                icon={<HiTrash />}
-              >
-                Apagar
-              </Menus.Btn>
+              <Menus.Btn icon={<HiTrash />}>Apagar</Menus.Btn>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
@@ -110,9 +94,6 @@ function AssignorRow({ assignor }: AssignorRowProps) {
           />
         </Modal.Window>
       </Table.Row>
-      {modalOpen && (
-        <EditAssignor assignor={assignor} onClose={handleModalClose} />
-      )}
     </>
   );
 }

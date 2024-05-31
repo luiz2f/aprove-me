@@ -4,10 +4,12 @@ import { Assignor, Payable } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { isUUID } from 'class-validator';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
+import { Pagination } from 'src/Pagination';
 
 type errorType = {
   message: string;
 };
+
 @Injectable()
 export class PayableRepository {
   constructor(private readonly databaseService: DatabaseService) {}
@@ -41,8 +43,13 @@ export class PayableRepository {
     });
   }
 
-  async findAll(): Promise<Payable[]> {
-    return await this.databaseService.payable.findMany();
+  async findAll(
+    params: Pagination,
+  ): Promise<{ data: Payable[]; length: number }> {
+    const data = await this.databaseService.payable.findMany(params);
+    const length = await this.databaseService.payable.count();
+
+    return { data, length };
   }
 
   async findById(id: string): Promise<Payable | errorType> {

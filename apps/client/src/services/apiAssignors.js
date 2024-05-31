@@ -1,4 +1,5 @@
 import { getToken } from "./apiAuth";
+import { PAGE_SIZE } from "../utils/constants";
 
 const apiUrl = "http://localhost:3000/api/integrations/assignor";
 
@@ -89,10 +90,12 @@ export async function createAssignor(assignor) {
   }
 }
 
-export async function getAssignors() {
+export async function getAssignors(page) {
+  const newApiUrl = `${apiUrl}?page=${page}&limit=${PAGE_SIZE}`;
+
   try {
     const request = await getJWT();
-    const response = await fetch(apiUrl, request);
+    const response = await fetch(newApiUrl, request);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -100,6 +103,39 @@ export async function getAssignors() {
     return await response.json();
   } catch (error) {
     console.error("Error getting assignors:", error.message);
+    throw error; // Rethrow the error after logging it.
+  }
+}
+export async function getAssignor(id) {
+  if (!id) return;
+  const newApiUrl = `${apiUrl}/${id}`;
+  try {
+    const request = await getJWT();
+    const response = await fetch(newApiUrl, request);
+
+    if (!response.ok) {
+      throw new Error(`getPayables HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error getting assignor:", error.message);
+    throw error; // Rethrow the error after logging it.
+  }
+}
+export async function getAssignorsIdsList() {
+  const newApiUrl = `${apiUrl}/list`;
+  try {
+    const request = await getJWT();
+    const response = await fetch(newApiUrl, request);
+
+    if (!response.ok) {
+      throw new Error(`getPayables HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error getting assignor:", error.message);
     throw error; // Rethrow the error after logging it.
   }
 }

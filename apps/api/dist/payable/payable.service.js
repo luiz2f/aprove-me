@@ -25,8 +25,8 @@ let PayableService = class PayableService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async findAll() {
-        return await this.payableRepository.findAll();
+    async findAll(params) {
+        return await this.payableRepository.findAll(params);
     }
     async findById(id) {
         try {

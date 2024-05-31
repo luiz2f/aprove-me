@@ -14,14 +14,17 @@ export declare class PayableController {
     } | {
         message: string;
     }>;
-    findAll(): Promise<{
-        id: string;
-        value: number;
-        emissionDate: Date;
-        assignorId: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
+    findAll(page?: number, limit?: number): Promise<void | {
+        data: {
+            id: string;
+            value: number;
+            emissionDate: Date;
+            assignorId: string;
+            createdAt: Date;
+            updatedAt: Date;
+        }[];
+        length: number;
+    }>;
     findById(id: string): Promise<{
         id: string;
         value: number;

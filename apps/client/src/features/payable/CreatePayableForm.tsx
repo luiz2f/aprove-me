@@ -6,7 +6,7 @@ import { StyledModal } from "../../ui/StyledModal";
 import { useForm } from "react-hook-form";
 import { useCreatePayable } from "./useCreatePayable";
 import StyledSelect from "../../ui/StyledSelect";
-import { useAssignors } from "../assignor/useAssignors";
+import { useAssignorsList } from "../assignor/useAssignorsList";
 import { useContext } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { ModalContext } from "../../ui/Modal";
@@ -51,10 +51,9 @@ export default function CreatePayableForm() {
   const { register, handleSubmit, reset, formState } = useForm();
   const { errors } = formState;
   const { createPayable, isCreating, error: errorsApi } = useCreatePayable();
-  const { assignors } = useAssignors();
+  const { assignorIds } = useAssignorsList();
   const { close } = useContext(ModalContext);
   const ref = useOutsideClick(close);
-
   function calendarShowPicker(e) {
     e?.target?.showPicker();
   }
@@ -101,10 +100,10 @@ export default function CreatePayableForm() {
               })}
             >
               <option value="">Selecione uma cedente</option>
-              {assignors?.map((assignor) => {
+              {assignorIds?.map((assignorId) => {
                 return (
-                  <option key={assignor.id} value={assignor.id}>
-                    {assignor.id}
+                  <option key={assignorId} value={assignorId}>
+                    {assignorId}
                   </option>
                 );
               })}

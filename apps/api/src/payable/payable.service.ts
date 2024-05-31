@@ -3,6 +3,7 @@ import { CreatePayableDto } from './dto/create-payable.dto';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
 import { PayableRepository } from './payable.repository';
 import { Payable } from '@prisma/client';
+import { Pagination } from 'src/Pagination';
 
 type errorType = {
   message: string;
@@ -21,8 +22,10 @@ export class PayableService {
     }
   }
 
-  async findAll(): Promise<Payable[]> {
-    return await this.payableRepository.findAll();
+  async findAll(
+    params: Pagination,
+  ): Promise<{ data: Payable[]; length: number } | void> {
+    return await this.payableRepository.findAll(params);
   }
 
   async findById(id: string): Promise<Payable | errorType> {

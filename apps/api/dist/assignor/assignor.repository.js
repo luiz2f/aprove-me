@@ -53,9 +53,23 @@ let AssignorRepository = class AssignorRepository {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async findAll() {
-        const assignors = await this.databaseService.assignor.findMany();
-        return assignors;
+    async findAll(params) {
+        const data = await this.databaseService.assignor.findMany({
+            ...params,
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+        const length = await this.databaseService.assignor.count();
+        return { data, length };
+    }
+    async findAllIds() {
+        const data = await this.databaseService.assignor.findMany({
+            select: {
+                id: true,
+            },
+        });
+        return data.map((item) => item.id);
     }
     async findById(id) {
         if (!(0, class_validator_1.isUUID)(id, 4)) {
@@ -111,7 +125,7 @@ let AssignorRepository = class AssignorRepository {
     }
     async remove(id) {
         await this.findById(id);
-        await this.databaseService.assignor.delete({
+        await this.databaseService.assignor.deleteMany({
             where: { id },
         });
         return { message: `Assignor with ID ${id} has been deleted successfully` };

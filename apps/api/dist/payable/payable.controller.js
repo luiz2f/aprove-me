@@ -26,8 +26,10 @@ let PayableController = class PayableController {
         const createdPayable = this.payableService.create(createPayableDto);
         return createdPayable;
     }
-    findAll() {
-        return this.payableService.findAll();
+    findAll(page = 1, limit = 10) {
+        const skip = (page - 1) * limit;
+        const take = limit;
+        return this.payableService.findAll({ skip, take });
     }
     findById(id) {
         return this.payableService.findById(id);
@@ -50,8 +52,10 @@ __decorate([
 ], PayableController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('limit', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", void 0)
 ], PayableController.prototype, "findAll", null);
 __decorate([

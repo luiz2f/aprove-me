@@ -15,15 +15,19 @@ export declare class AssignorController {
     } | {
         message: string;
     }>;
-    findAll(): Promise<{
-        id: string;
-        document: string;
-        email: string;
-        phone: string;
-        name: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
+    findAll(page?: number, limit?: number): Promise<void | {
+        data: {
+            id: string;
+            document: string;
+            email: string;
+            phone: string;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+        }[];
+        length: number;
+    }>;
+    findAllIds(): Promise<string[]>;
     findById(id: string): Promise<{
         id: string;
         document: string;

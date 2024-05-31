@@ -9,6 +9,8 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PayableService } from './payable.service';
 import { CreatePayableDto } from './dto/create-payable.dto';
@@ -27,9 +29,15 @@ export class PayableController {
 
     return createdPayable;
   }
+
   @Get()
-  findAll() {
-    return this.payableService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+  ) {
+    const skip = (page - 1) * limit;
+    const take = limit;
+    return this.payableService.findAll({ skip, take });
   }
 
   @Get(':id')

@@ -5,10 +5,9 @@ import { Button } from "../../ui/Button";
 import { useForm } from "react-hook-form";
 import { cnpj, cpf } from "cpf-cnpj-validator";
 import { useCreateAssignor } from "./useCreateAssignor";
+import { useAssignor } from "./useAssignor";
 import { useErrorHandling } from "./error-handling/useErrorHandling";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
-
-import { makeEmail } from "./makeEmail";
 import toast from "react-hot-toast";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { IconButton } from "../../ui/IconButton";
@@ -51,8 +50,10 @@ const Grid2C = styled.form`
   margin-top: 8px;
 `;
 
-export default function EditAssignor({ assignor, onClose }) {
-  const { id, document, name, phone, email, createdAt, updatedAt } = assignor;
+export default function EditAssignor({ openAssignor, onClose }) {
+  const { assignor, isPending } = useAssignor();
+  const { id, document, name, phone, email, createdAt, updatedAt } =
+    assignor || openAssignor || {};
   const { register, handleSubmit, reset, formState, getValues, setError } =
     useForm({
       defaultValues: {
@@ -67,6 +68,15 @@ export default function EditAssignor({ assignor, onClose }) {
   const { errorFlags, resetErrorFlags } = useErrorHandling(errorsApi?.message);
   const ref = useOutsideClick(onClose);
   const [hasChanges, setHasChanges] = useState(true);
+
+  useEffect(() => {
+    reset({
+      name,
+      document,
+      phone,
+      email,
+    });
+  }, [isPending]);
 
   function checkChange() {
     const newAssignor = {

@@ -27,8 +27,11 @@ let AssignorService = class AssignorService {
             throw new common_1.BadRequestException('An unexpected error occurred');
         }
     }
-    async findAll() {
-        return await this.assignorRepository.findAll();
+    async findAll(params) {
+        return await this.assignorRepository.findAll(params);
+    }
+    async findAllIds() {
+        return await this.assignorRepository.findAllIds();
     }
     async findById(id) {
         try {

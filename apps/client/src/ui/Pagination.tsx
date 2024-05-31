@@ -17,6 +17,8 @@ const StyledPagination = styled.div`
 `;
 
 const P = styled.p`
+  margin-top: 18px;
+
   font-size: 14px;
   margin-left: 8px;
 
@@ -30,7 +32,6 @@ const Buttons = styled.div`
   gap: 6px;
 `;
 const FakeButton = styled.div`
-  margin-top: 18px;
   background-color: transparent;
   border: none;
 
@@ -50,10 +51,10 @@ const PaginationButton = styled.button`
   background-color: transparent;
   border: none;
   border-bottom: ${(props) =>
-    props.active ? "4px solid #0a36b0" : "4px solid transparent"};
+    props.$active ? "4px solid #0a36b0" : "4px solid transparent"};
 
-  color: ${(props) => (props.active ? "#0a36b0" : "#333")};
-  font-weight: ${(props) => (props.active ? "700" : "500")};
+  color: ${(props) => (props.$active ? "#0a36b0" : "#333")};
+  font-weight: ${(props) => (props.$active ? "700" : "500")};
   font-size: 16px;
   display: ${(props) => (props.disabled ? "none" : "flex")};
   align-items: center;

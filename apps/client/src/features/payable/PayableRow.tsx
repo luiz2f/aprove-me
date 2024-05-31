@@ -4,7 +4,6 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { HiEye, HiTrash } from "react-icons/hi2";
 import { numberToBRL } from "../../utils/numberToBRL";
 import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
-import EditPayable from "./EditPayable";
 import Table from "../../ui/Table";
 import Modal from "../../ui/Modal";
 import Menus from "../../ui/Menu";
@@ -98,14 +97,7 @@ function PayableRow({ payable }: PayableRowProps) {
               Visualizar
             </Menus.Btn>
             <Modal.Open opens={`recebivel${payableId}`}>
-              <Menus.Btn
-                onClick={() => {
-                  console.log("bick");
-                }}
-                icon={<HiTrash />}
-              >
-                Apagar
-              </Menus.Btn>
+              <Menus.Btn icon={<HiTrash />}>Apagar</Menus.Btn>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>

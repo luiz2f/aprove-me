@@ -13,8 +13,11 @@ import { IconButton } from "../../ui/IconButton";
 import Input from "../../ui/Input";
 import StyledSelect from "../../ui/StyledSelect";
 import FormRow from "../../ui/FormRow";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { usePayable } from "./usePayable";
+import Spinner from "../../ui/Spinner";
+import { useAssignorsList } from "../assignor/useAssignorsList";
 
 const StyledCreatePayable = styled.div`
   box-shadow: 0 0 20px #00000012;
@@ -61,8 +64,10 @@ const StyledButton = styled.button`
   text-decoration: underline;
 `;
 
-export default function EditPayable({ payable, onClose }) {
-  const { id, value, emissionDate, assignorId, createdAt, updatedAt } = payable;
+export default function EditPayable({ openPayable, onClose }) {
+  const { payable, isPending } = usePayable();
+  const { id, value, emissionDate, assignorId, createdAt, updatedAt } =
+    payable || openPayable || {};
   const { register, handleSubmit, reset, formState, getValues } = useForm({
     defaultValues: {
       value,
@@ -71,12 +76,19 @@ export default function EditPayable({ payable, onClose }) {
     },
   });
   const [hasChanges, setHasChanges] = useState(true);
-  console.log("test");
   const navigate = useNavigate();
   const { errors } = formState;
   const { createPayable, isCreating } = useCreatePayable();
-  const { assignors } = useAssignors();
+  const { assignorIds } = useAssignorsList();
   const ref = useOutsideClick(onClose);
+
+  useEffect(() => {
+    reset({
+      value,
+      emissionDate: ISOtoStringDate(emissionDate, true),
+      assignorId,
+    });
+  }, [isPending]);
 
   function checkChange() {
     const newPayable = {
@@ -115,96 +127,97 @@ export default function EditPayable({ payable, onClose }) {
   function onError(error) {
     console.log(error, "sub");
   }
-
   return (
     <StyledModal>
-      <StyledCreatePayable ref={ref}>
-        <Flex>
-          <StyledTitleCreatePayable>Recebível</StyledTitleCreatePayable>
-          <IconButton onClick={onClose}>
-            <HiOutlineXMark />
-          </IconButton>
-        </Flex>
-        <Info title="ID do Recebível">{id}</Info>
-        <Grid2C>
-          <Info title="Criado em">{ISOtoStringDate(createdAt)}</Info>
-          <Info className="right" title="Última Atualização">
-            {ISOtoStringDate(updatedAt)}
-          </Info>
-        </Grid2C>
-        <Form onSubmit={handleSubmit(onSubmit, onError)} onChange={checkChange}>
-          <FormRow label="ID do Cedente" error={errors?.assignorId?.message}>
-            <div id="assignorId">
-              <StyledSelect
-                $error={errors?.assignorId?.message}
+      {isPending ? (
+        <Spinner />
+      ) : (
+        <StyledCreatePayable ref={ref}>
+          <Flex>
+            <StyledTitleCreatePayable>Recebível</StyledTitleCreatePayable>
+            <IconButton onClick={onClose}>
+              <HiOutlineXMark />
+            </IconButton>
+          </Flex>
+          <Info title="ID do Recebível">{id}</Info>
+          <Grid2C>
+            <Info title="Criado em">{ISOtoStringDate(createdAt)}</Info>
+            <Info className="right" title="Última Atualização">
+              {ISOtoStringDate(updatedAt)}
+            </Info>
+          </Grid2C>
+          <Form
+            onSubmit={handleSubmit(onSubmit, onError)}
+            onChange={checkChange}
+          >
+            <FormRow label="ID do Cedente" error={errors?.assignorId?.message}>
+              <div id="assignorId">
+                <StyledSelect
+                  $error={errors?.assignorId?.message}
+                  disabled={isCreating}
+                  type="text"
+                  id="assignorId"
+                  {...register("assignorId", {
+                    required: "Campo obrigatório",
+                  })}
+                >
+                  <option value={assignorId}>{assignorId}</option>
+                  {assignorIds?.map((assignorId) => {
+                    return (
+                      <option key={assignorId} value={assignorId}>
+                        {assignorId}
+                      </option>
+                    );
+                  })}
+                </StyledSelect>
+              </div>
+            </FormRow>
+            <NavLink to={`/cedentes/${assignorId}`}>
+              <StyledButton type="button">Visualizar Cedente </StyledButton>
+            </NavLink>
+            <FormRow label="Valor" error={errors?.value?.message}>
+              <Input
+                $error={errors?.value?.message}
                 disabled={isCreating}
-                type="text"
-                id="assignorId"
-                {...register("assignorId", {
+                type="number"
+                step="0.01"
+                id="value"
+                {...register("value", {
+                  required: "Campo obrigatório",
+                  validate: (value) =>
+                    parseFloat(value) >= 0.01 || "Inserir um valor válido",
+                })}
+              />
+            </FormRow>
+            <FormRow
+              label="Data da Emissão"
+              error={errors?.emissionDate?.message}
+            >
+              <Input
+                $error={errors?.emissionDate?.message}
+                disabled={isCreating}
+                type="date"
+                id="emissionDate"
+                onClick={(e) => calendarShowPicker(e)}
+                onFocus={(e) => calendarShowPicker(e)}
+                {...register("emissionDate", {
                   required: "Campo obrigatório",
                 })}
+              />
+            </FormRow>
+            <StyledButtonBox>
+              <Button
+                disabled={hasChanges}
+                type="submit"
+                size="large"
+                $widthohp="true"
               >
-                <option value={assignorId}>{assignorId}</option>
-                {assignors?.map((assignor) => {
-                  return (
-                    <option key={assignor.id} value={assignor.id}>
-                      {assignor.id}
-                    </option>
-                  );
-                })}
-              </StyledSelect>
-            </div>
-          </FormRow>
-          <StyledButton
-            type="button"
-            onClick={() => navigate(`/cedentes/${assignorId}`)}
-          >
-            Visualizar Cedente{" "}
-          </StyledButton>
-
-          <FormRow label="Valor" error={errors?.value?.message}>
-            <Input
-              $error={errors?.value?.message}
-              disabled={isCreating}
-              type="number"
-              step="0.01"
-              id="value"
-              {...register("value", {
-                required: "Campo obrigatório",
-                validate: (value) =>
-                  parseFloat(value) >= 0.01 || "Inserir um valor válido",
-              })}
-            />
-          </FormRow>
-
-          <FormRow
-            label="Data da Emissão"
-            error={errors?.emissionDate?.message}
-          >
-            <Input
-              $error={errors?.emissionDate?.message}
-              disabled={isCreating}
-              type="date"
-              id="emissionDate"
-              onClick={(e) => calendarShowPicker(e)}
-              onFocus={(e) => calendarShowPicker(e)}
-              {...register("emissionDate", {
-                required: "Campo obrigatório",
-              })}
-            />
-          </FormRow>
-          <StyledButtonBox>
-            <Button
-              disabled={hasChanges}
-              type="submit"
-              size="large"
-              $widthohp="true"
-            >
-              Atualizar Recebível
-            </Button>
-          </StyledButtonBox>
-        </Form>
-      </StyledCreatePayable>
+                Atualizar Recebível
+              </Button>
+            </StyledButtonBox>
+          </Form>
+        </StyledCreatePayable>
+      )}
     </StyledModal>
   );
 }

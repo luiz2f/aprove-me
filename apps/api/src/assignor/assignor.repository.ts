@@ -5,6 +5,7 @@ import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { isUUID } from 'class-validator';
 import { DatabaseService } from '../database/database.service';
 import { Assignor } from '@prisma/client';
+import { Pagination } from 'src/Pagination';
 
 @Injectable()
 export class AssignorRepository {
@@ -58,10 +59,27 @@ export class AssignorRepository {
     }
   }
 
-  async findAll(): Promise<Assignor[]> {
-    const assignors = await this.databaseService.assignor.findMany();
+  async findAll(
+    params: Pagination,
+  ): Promise<{ data: Assignor[]; length: number }> {
+    const data = await this.databaseService.assignor.findMany({
+      ...params,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    const length = await this.databaseService.assignor.count();
 
-    return assignors;
+    return { data, length };
+  }
+  async findAllIds(): Promise<string[]> {
+    const data = await this.databaseService.assignor.findMany({
+      select: {
+        id: true,
+      },
+    });
+
+    return data.map((item) => item.id);
   }
 
   async findById(id: string): Promise<Assignor | { message: string }> {
@@ -131,7 +149,7 @@ export class AssignorRepository {
     //check UUID and if exists
     await this.findById(id);
 
-    await this.databaseService.assignor.delete({
+    await this.databaseService.assignor.deleteMany({
       where: { id },
     });
 

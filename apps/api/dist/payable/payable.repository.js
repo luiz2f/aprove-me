@@ -39,8 +39,10 @@ let PayableRepository = class PayableRepository {
             },
         });
     }
-    async findAll() {
-        return await this.databaseService.payable.findMany();
+    async findAll(params) {
+        const data = await this.databaseService.payable.findMany(params);
+        const length = await this.databaseService.payable.count();
+        return { data, length };
     }
     async findById(id) {
         if (!(0, class_validator_1.isUUID)(id, 4)) {

@@ -3,9 +3,21 @@ import AssignorRow from "./AssignorRow";
 import { useAssignors } from "./useAssignors";
 import Spinner from "../../ui/Spinner";
 import Menus from "../../ui/Menu";
+import Pagination from "../../ui/Pagination";
+import EditAssignor from "./EditAssignor";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 function AssignorTable() {
-  const { isPending, assignors } = useAssignors();
+  const { isPending, assignors, length } = useAssignors();
+  const { id } = useParams(); // Obtém o parâmetro id da URL
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get("page") || 1;
+  const openAssignor = assignors?.find((assignor) => assignor?.id === id);
+
+  const handleModalClose = () => {
+    navigate(`/cedentes?page=${page}`);
+  };
 
   if (isPending) {
     return <Spinner />;
@@ -33,6 +45,12 @@ function AssignorTable() {
           )}
         </div>
       </Table>
+      <Pagination count={length} />
+      {id ? (
+        <EditAssignor openAssignor={openAssignor} onClose={handleModalClose} />
+      ) : (
+        ""
+      )}
     </Menus>
   );
 }

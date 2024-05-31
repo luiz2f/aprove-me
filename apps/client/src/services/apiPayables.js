@@ -1,6 +1,5 @@
-import { useActionData } from "react-router-dom";
 import { getToken } from "./apiAuth";
-import { MutationCache, QueryClient } from "@tanstack/react-query";
+import { PAGE_SIZE } from "../utils/constants";
 
 const apiUrl = "http://localhost:3000/api/integrations/payable";
 
@@ -81,7 +80,6 @@ export async function createPayable(payable) {
     if (!response.ok) {
       throw new Error(data.statusCode);
     }
-    console.log(data);
     return data;
   } catch (error) {
     // Se for um objeto de erro conhecido, lance-o como está
@@ -92,17 +90,36 @@ export async function createPayable(payable) {
   }
 }
 
-export async function getPayables() {
+export async function getPayables(page) {
+  const newApiUrl = `${apiUrl}?page=${page}&limit=${PAGE_SIZE}`;
   try {
     const request = await getJWT();
-    const response = await fetch(apiUrl, request);
+    const response = await fetch(newApiUrl, request);
 
     if (!response.ok) {
       throw new Error(`getPayables HTTP error! Status: ${response.status}`);
     }
-    return await response.json();
+    const { data, length } = await response.json();
+    return { data, length };
   } catch (error) {
     console.error("Error getting payables:", error.message);
+    throw error; // Rethrow the error after logging it.
+  }
+}
+export async function getPayable(id) {
+  if (!id) return;
+  const newApiUrl = `${apiUrl}/${id}`;
+  try {
+    const request = await getJWT();
+    const response = await fetch(newApiUrl, request);
+
+    if (!response.ok) {
+      throw new Error(`getPayables HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error getting payable:", error.message);
     throw error; // Rethrow the error after logging it.
   }
 }

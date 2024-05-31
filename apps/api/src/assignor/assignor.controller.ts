@@ -10,6 +10,8 @@ import {
   ValidationPipe,
   UseGuards,
   UseFilters,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AssignorService } from './assignor.service';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
@@ -29,8 +31,17 @@ export class AssignorController {
   }
 
   @Get()
-  findAll() {
-    return this.assignorService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+  ) {
+    const skip = (page - 1) * limit;
+    const take = limit;
+    return this.assignorService.findAll({ skip, take });
+  }
+  @Get('list')
+  findAllIds() {
+    return this.assignorService.findAllIds();
   }
 
   @Get(':id')

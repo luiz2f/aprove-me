@@ -14,12 +14,12 @@ export function usePayables() {
 
   const {
     isPending,
-    data: payables = [],
+    data: payablesData,
     error,
     failureReason,
   } = useQuery({
-    queryKey: ["payable"],
-    queryFn: getPayables,
+    queryKey: ["payable", currentPage],
+    queryFn: () => getPayables(currentPage),
     retry: 3,
   });
 
@@ -28,12 +28,22 @@ export function usePayables() {
     navigate("/login", { replace: true });
     toast.error("Sua sessão expirou, faça login novamente para continuar");
   }
+  const { data: payables, length } = payablesData || {};
 
-  const count = payables?.length;
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const findPayable = payables;
-  const paginatedPayables = payables?.slice(startIndex, endIndex);
+  // pre-fetch
+  if (length) {
+    const pageCount = Math.ceil(length / PAGE_SIZE);
+    if (currentPage < pageCount)
+      queryClient.prefetchQuery({
+        queryKey: ["payable", currentPage + 1],
+        queryFn: () => getPayables(currentPage + 1),
+      });
+    if (currentPage > 1)
+      queryClient.prefetchQuery({
+        queryKey: ["payable", currentPage - 1],
+        queryFn: () => getPayables(currentPage - 1),
+      });
+  }
 
-  return { isPending, payables: paginatedPayables, findPayable, count, error };
+  return { isPending, payables, length, error };
 }
