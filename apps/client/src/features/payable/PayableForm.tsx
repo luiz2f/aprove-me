@@ -99,9 +99,6 @@ export default function PayableForm({ openPayable, assignorIds, createForm }) {
     );
   }
 
-  useEffect(() => {
-    reset();
-  }, []);
   function onError(error) {
     console.log(error, "sub");
   }
