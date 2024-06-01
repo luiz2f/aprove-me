@@ -17,18 +17,18 @@ const Flex = styled.div`
   justify-content: space-between;
   margin-bottom: 14px;
 `;
-// const SearchBar = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   margin-bottom: 14px;
-// `;
-// const SearchBarInput = styled.input`
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   margin-bottom: 14px;
-// `;
+const SearchBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+`;
+const SearchBarInput = styled.input`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+`;
 const Padding = styled.div`
   padding: 48px;
 `;
@@ -37,7 +37,6 @@ function Payables() {
   return (
     <Modal>
       <Padding>
-        {/* <CreatePayableForm /> */}
         <Flex>
           <Active>Recebíveis </Active>
           {/* <SearchBar>

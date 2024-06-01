@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPayable as createPayableApi } from "../../services/apiPayables";
+import { useHandleAuthFailure } from "../../hooks/useRedirect";
 
 export function useCreatePayable() {
   const queryClient = useQueryClient();
@@ -8,6 +9,7 @@ export function useCreatePayable() {
     mutate: createPayable,
     isPending: isCreating,
     error,
+    failureReason,
   } = useMutation({
     mutationFn: createPayableApi,
     onSuccess: () => {
@@ -21,6 +23,7 @@ export function useCreatePayable() {
       console.log("ERROR", err.message);
     },
   });
+  useHandleAuthFailure(failureReason);
 
   return { createPayable, isCreating, error };
 }

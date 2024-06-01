@@ -132,8 +132,6 @@ export default function EditAssignor({ openAssignor, onClose }) {
     return true;
   }
 
-  // COLOCAR CPF CNPJ
-
   return (
     <StyledModal>
       <StyledCreateAssignor ref={ref}>

@@ -31,7 +31,11 @@ const StyledTitleCreatePayable = styled.div`
   font-size: 24px;
   font-weight: 700;
 `;
-
+const StyledButtonBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+`;
 const Flex = styled.div`
   display: flex;
   width: 100%;
@@ -39,11 +43,39 @@ const Flex = styled.div`
   justify-content: space-between;
   margin-bottom: 28px;
 `;
+const Form = styled.form``;
+const MaxContent = styled.div`
+  width: max-content;
+`;
 
 export default function CreatePayableForm() {
+  const { register, handleSubmit, reset, formState } = useForm();
+  const { errors } = formState;
+  const { createPayable, isCreating, error: errorsApi } = useCreatePayable();
   const { assignorIds } = useAssignorsList();
   const { close } = useContext(ModalContext);
   const ref = useOutsideClick(close);
+  function calendarShowPicker(e) {
+    e?.target?.showPicker();
+  }
+
+  function onSubmit(data) {
+    const formattedData = {
+      ...data,
+      value: parseFloat(data.value),
+      emissionDate: new Date(data.emissionDate).toISOString(),
+    };
+
+    createPayable(formattedData, {
+      onSuccess: () => {
+        reset();
+        toast.success("Recebível criado com sucesso.");
+      },
+    });
+  }
+  function onError(error) {
+    console.log(error, "sub");
+  }
 
   return (
     <StyledModal>
@@ -57,7 +89,7 @@ export default function CreatePayableForm() {
             <HiOutlineXMark />
           </IconButton>
         </Flex>
-        <PayableForm assignorIds={assignorIds} openPayable={null} createForm />
+        <PayableForm assignorIds={assignorIds} createForm />
       </StyledCreatePayable>
     </StyledModal>
   );
