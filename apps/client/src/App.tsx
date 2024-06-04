@@ -40,6 +40,7 @@ function App() {
           </Route>
 
           <Route path="login" element={<LoginSignup />}></Route>
+          <Route path="signup" element={<LoginSignup />} />
           <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
       </BrowserRouter>
