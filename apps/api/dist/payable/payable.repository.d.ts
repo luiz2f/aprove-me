@@ -1,8 +1,8 @@
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { Assignor, Payable } from '@prisma/client';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../database/database.service';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 type errorType = {
     message: string;
 };

@@ -1,121 +1,252 @@
-// import { AssignorService } from '../assignor.service';
+import { Test } from '@nestjs/testing';
+import { AssignorRepository } from '../assignor.repository';
+import { AssignorService } from '../assignor.service';
+import { mockAssignor } from './assignor.mock';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import { cnpj, cpf } from 'cpf-cnpj-validator';
 
-// import { mockAssignor } from './assignor.mock';
-// import { DatabaseModule } from '../../database/database.module';
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { DatabaseService } from '../../database/database.service';
-// import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-// import { PrismaClient } from '@prisma/client';
+const mockAssignorRepository = () => ({
+  create: jest.fn(),
+  findAll: jest.fn(),
+  findAllIds: jest.fn(),
+  findById: jest.fn(),
+  update: jest.fn(),
+  remove: jest.fn(),
+});
 
-// // https://guymanzurola.medium.com/nestjs-mocking-with-jest-mock-extended-31abdc1c5b2d
+describe('AssignorService', () => {
+  let assignorService: AssignorService;
+  let assignorRepository;
 
-// describe('Assignor test unit', () => {
-//   let assignorService: AssignorService;
-//   let databaseService: DeepMockProxy<PrismaClient>;
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        AssignorService,
+        { provide: AssignorRepository, useFactory: mockAssignorRepository },
+      ],
+    }).compile();
+    assignorService = module.get(AssignorService);
+    assignorRepository = module.get(AssignorRepository);
+  });
+  describe('create assignor', () => {
+    it('should successfuly create a new assignor', async () => {
+      const newMockAssignor = mockAssignor();
+      const { email, name, document, phone } = newMockAssignor;
+      const createAssignor = { email, name, document, phone };
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       imports: [DatabaseModule],
-//       providers: [AssignorService, DatabaseService],
-//     })
-//       .overrideProvider(DatabaseService)
-//       .useValue(mockDeep<PrismaClient>())
-//       .compile();
+      assignorRepository.create.mockResolvedValue(newMockAssignor);
 
-//     assignorService = module.get<AssignorService>(AssignorService);
-//     databaseService = module.get<DatabaseService>(DatabaseService);
+      const result = await assignorService.create(createAssignor);
+      expect(assignorRepository.create).toHaveBeenCalled();
+      expect(result).toEqual(newMockAssignor);
+    });
+    it('shouldn`t create a new assignor with invalid document', async () => {
+      const newMockAssignor = mockAssignor({ document: '12345678910' });
+      const { email, name, document, phone } = newMockAssignor;
+      const createAssignor = { email, name, document, phone };
 
-//     describe('create new assignor', () => {
-//       it('should create an assignor', async () => {
-//         const newAssignor = mockAssignor();
+      assignorRepository.create.mockRejectedValue(
+        new BadRequestException(`${document} is not a valid document`),
+      );
+      await expect(assignorService.create(createAssignor)).rejects.toThrow(
+        new BadRequestException(`${document} is not a valid document`),
+      );
+      expect(assignorRepository.create).toHaveBeenCalledWith(createAssignor);
+    });
+    it('shouldn`t create a new assignor with in use document', async () => {
+      const newMockAssignor = mockAssignor();
+      const { email, name, document, phone } = newMockAssignor;
+      const createAssignor = { email, name, document, phone };
 
-//         const result = await assignorService.create(newAssignor);
-//         expect(result).toBeDefined();
-//         expect(result).toEqual(newAssignor);
-//         expect(assignorService.create).toHaveBeenCalledWith(newAssignor);
-//       });
+      assignorRepository.create.mockRejectedValue(
+        new ConflictException('Document is already in use'),
+      );
+      await expect(assignorService.create(createAssignor)).rejects.toThrow(
+        new ConflictException('Document is already in use'),
+      );
+      expect(assignorRepository.create).toHaveBeenCalledWith(createAssignor);
+    });
+    it('shouldn`t create a new assignor with in use email', async () => {
+      const newMockAssignor = mockAssignor();
+      const { email, name, document, phone } = newMockAssignor;
+      const createAssignor = { email, name, document, phone };
 
-//       // it('should not be able create an assignor with an invalid email', async () => {
-//       //   const newAssignor = {
-//       //     document: '12345678',
-//       //     email: 'testexample.com',
-//       //     phone: '1234567890',
-//       //     name: 'Test Assignor',
-//       //   };
+      assignorRepository.create.mockRejectedValue(
+        new ConflictException('Email is already in use'),
+      );
+      await expect(assignorService.create(createAssignor)).rejects.toThrow(
+        new ConflictException('Email is already in use'),
+      );
+      expect(assignorRepository.create).toHaveBeenCalledWith(createAssignor);
+    });
+  });
+  describe('update assignor', () => {
+    it('should successfuly update a new assignor', async () => {
+      const newMockAssignor = mockAssignor();
+      const { email, name, document, phone, id } = newMockAssignor;
+      const data = { email, name, document, phone };
 
-//       //   jest
-//       //     .spyOn(assignorService, 'create')
-//       //     .mockRejectedValue(new BadRequestException('email must be an email'));
+      assignorRepository.update.mockResolvedValue(newMockAssignor);
 
-//       //   try {
-//       //     await assignorService.create(newAssignor);
-//       //   } catch (error) {
-//       //     expect(error).toBeInstanceOf(BadRequestException);
-//       //     expect(error.response.message).toBe('email must be an email');
-//       //   }
-//       // });
-//       // it('should not be able create an assignor with an email in use', async () => {
-//       //   const existent = {
-//       //     document: '09892564000150',
-//       //     email: 'test@example.com',
-//       //     phone: '1234567890',
-//       //     name: 'Test Assignor',
-//       //   };
-//       //   jest.spyOn(assignorService, 'create').mockResolvedValue(existent);
+      const result = await assignorService.update(id, data);
+      expect(assignorRepository.update).toHaveBeenCalled();
+      expect(result).toEqual(newMockAssignor);
+    });
+    it('shouldn`t update assignor with invalid document', async () => {
+      const newMockAssignor = mockAssignor({ document: '12345678910' });
+      const { email, name, document, phone, id } = newMockAssignor;
+      const data = { email, name, document, phone };
 
-//       //   const resu = await assignorService.create(existent);
-//       //   console.log(resu);
-//       //   const repeatedEmailAssignor = {
-//       //     document: '79430334000',
-//       //     email: 'test@example.com',
-//       //     phone: '1234567890',
-//       //     name: 'Test Assignor',
-//       //   };
-//       //   jest
-//       //     .spyOn(assignorService, 'create')
-//       //     .mockResolvedValue(repeatedEmailAssignor);
+      assignorRepository.update.mockRejectedValue(
+        new BadRequestException(`${document} is not a valid document`),
+      );
+      await expect(assignorService.update(id, data)).rejects.toThrow(
+        new BadRequestException(`${document} is not a valid document`),
+      );
+      expect(assignorRepository.update).toHaveBeenCalledWith(id, data);
+    });
+    it('shouldn`t update assignor with in use document', async () => {
+      const newMockAssignor = mockAssignor({ document: '12345678910' });
+      const { email, name, document, phone, id } = newMockAssignor;
+      const data = { email, name, document, phone };
 
-//       //   try {
-//       //     const result = await assignorService.create(repeatedEmailAssignor);
-//       //     console.log(result);
+      assignorRepository.update.mockRejectedValue(
+        new ConflictException('Document is already in use'),
+      );
+      await expect(assignorService.update(id, data)).rejects.toThrow(
+        new ConflictException('Document is already in use'),
+      );
+      expect(assignorRepository.update).toHaveBeenCalledWith(id, data);
+    });
+    it('shouldn`t update assignor with in use email', async () => {
+      const newMockAssignor = mockAssignor({ document: '12345678910' });
+      const { email, name, document, phone, id } = newMockAssignor;
+      const data = { email, name, document, phone };
 
-//       //     // Se não ocorrer um erro, falha o teste
-//       //     expect(result).not.toBeDefined(); // Certifique-se de que o resultado seja undefined
-//       //   } catch (error) {
-//       //     // Se ocorrer um erro, verifique se é o erro esperado
-//       //     expect(error.message).toBe('Email is already in use');
-//       //   }
-//       // });
-//       // it('should not be able to create an assignor using a invalid document', async () => {
-//       //   const newAssignor = {
-//       //     document: '12345678978',
-//       //     email: 'test@example.com',
-//       //     phone: '1234567890',
-//       //     name: 'Test Assignor',
-//       //   };
+      assignorRepository.update.mockRejectedValue(
+        new ConflictException('Email is already in use'),
+      );
+      await expect(assignorService.update(id, data)).rejects.toThrow(
+        new ConflictException('Email is already in use'),
+      );
+      expect(assignorRepository.update).toHaveBeenCalledWith(id, data);
+    });
+    it('shouldn`t update assignor with invalid UUID', async () => {
+      const newMockAssignor = mockAssignor({ id: '12345678910' });
+      const { email, name, document, phone, id } = newMockAssignor;
+      const data = { email, name, document, phone };
 
-//       //   await expect(assignorService.create(newAssignor)).rejects.toThrow(
-//       //     BadRequestException,
-//       //   );
-//       // });
-//       // it('should not be able to create an assignor using a invalid email', async () => {
-//       //   const wrongEmail = {
-//       //     document: '09892564000150',
-//       //     email: 'testexample.com',
-//       //     phone: '1234567890',
-//       //     name: 'Test Assignor',
-//       //   };
+      assignorRepository.update.mockRejectedValue(
+        new BadRequestException(`Invalid ID format: ${id}`),
+      );
+      await expect(assignorService.update(id, data)).rejects.toThrow(
+        new BadRequestException(`Invalid ID format: ${id}`),
+      );
+      expect(assignorRepository.update).toHaveBeenCalledWith(id, data);
+    });
+    it('shouldn`t update non existing assignor', async () => {
+      const newMockAssignor = mockAssignor({ id: '12345678910' });
+      const { email, name, document, phone, id } = newMockAssignor;
+      const data = { email, name, document, phone };
 
-//       //   const result = await assignorService.create(wrongEmail);
-//       //   console.log(result);
-//       // });
-//     });
-//     // describe('delete new assignor', () => {
-//     //   it('should delete the new assignor', async () => {
-//     //     const result = await assignorService.findAll();
-//     //     expect(result).toBeDefined();
-//     //     console.log(result);
-//     //   });
-//     // });
-//   });
-// });
+      assignorRepository.update.mockRejectedValue(
+        new NotFoundException(`Assignor with ID ${id} not found`),
+      );
+      await expect(assignorService.update(id, data)).rejects.toThrow(
+        new NotFoundException(`Assignor with ID ${id} not found`),
+      );
+      expect(assignorRepository.update).toHaveBeenCalledWith(id, data);
+    });
+  });
+  describe('find assignor', () => {
+    it('should find assignor', async () => {
+      const newMockAssignor = mockAssignor({ id: '12345678910' });
+      const { id } = newMockAssignor;
+
+      assignorRepository.findById.mockResolvedValue(newMockAssignor);
+      const response = await assignorService.findById(id);
+      expect(response).toEqual(newMockAssignor);
+      expect(assignorRepository.findById).toHaveBeenCalledWith(id);
+    });
+    it('shouldn`t find assignor with invalid UUID', async () => {
+      const newMockAssignor = mockAssignor({ id: '12345678910' });
+      const { id } = newMockAssignor;
+
+      assignorRepository.findById.mockRejectedValue(
+        new BadRequestException(`Invalid ID format: ${id}`),
+      );
+      await expect(assignorService.findById(id)).rejects.toThrow(
+        new BadRequestException(`Invalid ID format: ${id}`),
+      );
+      expect(assignorRepository.findById).toHaveBeenCalledWith(id);
+    });
+    it('shouldn`t not find non existing assignor', async () => {
+      const newMockAssignor = mockAssignor();
+      const { id } = newMockAssignor;
+
+      assignorRepository.findById.mockRejectedValue(
+        new NotFoundException(`Assignor with ID ${id} not found`),
+      );
+      await expect(assignorService.findById(id)).rejects.toThrow(
+        new NotFoundException(`Assignor with ID ${id} not found`),
+      );
+      expect(assignorRepository.findById).toHaveBeenCalledWith(id);
+    });
+  });
+  describe('find all assignors', () => {
+    it('should find all assignors', async () => {
+      const newMockAssignor = mockAssignor();
+
+      assignorRepository.findAll.mockResolvedValue([newMockAssignor]);
+      const response = await assignorService.findAll({ skip: 0, take: 10 });
+      expect(response).toEqual([newMockAssignor]);
+      expect(assignorRepository.findAll).toHaveBeenCalledWith({
+        skip: 0,
+        take: 10,
+      });
+    });
+  });
+  describe('remove assignor', () => {
+    it('should remove assignors by id`', async () => {
+      const newMockAssignor = mockAssignor();
+      const { id } = newMockAssignor;
+
+      assignorRepository.remove.mockResolvedValue({
+        message: `Assignor with ID ${id} has been deleted successfully`,
+      });
+      const response = await assignorService.remove(id);
+      expect(response).toEqual({
+        message: `Assignor with ID ${id} has been deleted successfully`,
+      });
+      expect(assignorRepository.remove).toHaveBeenCalledWith(id);
+    });
+    it('shouldn`t remove assignor with invalid UUID', async () => {
+      const newMockAssignor = mockAssignor({ id: '12345678910' });
+      const { id } = newMockAssignor;
+
+      assignorRepository.remove.mockRejectedValue(
+        new BadRequestException(`Invalid ID format: ${id}`),
+      );
+      await expect(assignorService.remove(id)).rejects.toThrow(
+        new BadRequestException(`Invalid ID format: ${id}`),
+      );
+      expect(assignorRepository.remove).toHaveBeenCalledWith(id);
+    });
+    it('shouldn`t remove find non existing assignor', async () => {
+      const newMockAssignor = mockAssignor();
+      const { id } = newMockAssignor;
+
+      assignorRepository.remove.mockRejectedValue(
+        new NotFoundException(`Assignor with ID ${id} not found`),
+      );
+      await expect(assignorService.remove(id)).rejects.toThrow(
+        new NotFoundException(`Assignor with ID ${id} not found`),
+      );
+      expect(assignorRepository.remove).toHaveBeenCalledWith(id);
+    });
+  });
+});

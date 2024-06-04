@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
 import { PayableRepository } from './payable.repository';
 import { Payable } from '@prisma/client';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 
 type errorType = {
   message: string;
@@ -18,7 +18,7 @@ export class PayableService {
       const newPayable = await this.payableRepository.create(data);
       return newPayable;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw error;
     }
   }
 
@@ -33,7 +33,7 @@ export class PayableService {
       const payable = await this.payableRepository.findById(id);
       return payable;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw error;
     }
   }
   async update(
@@ -45,7 +45,7 @@ export class PayableService {
       const updatedPayable = await this.payableRepository.update(id, data);
       return updatedPayable;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw error;
     }
   }
 

@@ -2,7 +2,7 @@ import { Assignor } from '@prisma/client';
 import { AssignorRepository } from './assignor.repository';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 export declare class AssignorService {
     private readonly assignorRepository;
     constructor(assignorRepository: AssignorRepository);

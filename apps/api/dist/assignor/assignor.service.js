@@ -21,10 +21,7 @@ let AssignorService = class AssignorService {
             return await this.assignorRepository.create(data);
         }
         catch (error) {
-            if (error instanceof common_1.BadRequestException) {
-                throw error;
-            }
-            throw new common_1.BadRequestException('An unexpected error occurred');
+            throw error;
         }
     }
     async findAll(params) {
@@ -38,10 +35,7 @@ let AssignorService = class AssignorService {
             return await this.assignorRepository.findById(id);
         }
         catch (error) {
-            if (error instanceof common_1.BadRequestException) {
-                throw error;
-            }
-            throw new common_1.BadRequestException('An unexpected error occurred');
+            throw error;
         }
     }
     async update(id, data) {
@@ -49,10 +43,7 @@ let AssignorService = class AssignorService {
             return await this.assignorRepository.update(id, data);
         }
         catch (error) {
-            if (error instanceof common_1.BadRequestException) {
-                throw error;
-            }
-            throw new common_1.BadRequestException('An unexpected error occurred');
+            throw error;
         }
     }
     async remove(id) {

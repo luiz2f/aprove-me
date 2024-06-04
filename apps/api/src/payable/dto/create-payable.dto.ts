@@ -1,4 +1,3 @@
-// src/integrations/dtos/create-payable.dto.ts
 import { IsNotEmpty, IsUUID, IsNumber, Min } from 'class-validator';
 
 export class CreatePayableDto {

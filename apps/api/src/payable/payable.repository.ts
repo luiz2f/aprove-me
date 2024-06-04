@@ -1,10 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { Assignor, Payable } from '@prisma/client';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../database/database.service';
 import { isUUID } from 'class-validator';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 
 type errorType = {
   message: string;
@@ -24,7 +28,7 @@ export class PayableRepository {
     });
 
     if (!assignor) {
-      throw new BadRequestException(`Assignor with ID ${id} not found`);
+      throw new NotFoundException(`Assignor with ID ${id} not found`);
     }
 
     return assignor;
@@ -62,7 +66,7 @@ export class PayableRepository {
     });
 
     if (!payable) {
-      throw new BadRequestException(`Payable with ID ${id} not found`);
+      throw new NotFoundException(`Payable with ID ${id} not found`);
     }
 
     return payable;

@@ -22,7 +22,7 @@ let PayableService = class PayableService {
             return newPayable;
         }
         catch (error) {
-            throw new common_1.BadRequestException(error.message);
+            throw error;
         }
     }
     async findAll(params) {
@@ -34,7 +34,7 @@ let PayableService = class PayableService {
             return payable;
         }
         catch (error) {
-            throw new common_1.BadRequestException(error.message);
+            throw error;
         }
     }
     async update(id, data) {
@@ -44,7 +44,7 @@ let PayableService = class PayableService {
             return updatedPayable;
         }
         catch (error) {
-            throw new common_1.BadRequestException(error.message);
+            throw error;
         }
     }
     async remove(id) {

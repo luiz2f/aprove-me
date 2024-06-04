@@ -36,7 +36,7 @@ let AssignorRepository = class AssignorRepository {
             errors.push('Document is already in use');
         }
         if (Object.keys(errors).length > 0) {
-            throw new common_1.BadRequestException(errors);
+            throw new common_1.ConflictException(errors);
         }
         try {
             const assignor = await this.databaseService.assignor.create({
@@ -79,7 +79,7 @@ let AssignorRepository = class AssignorRepository {
             where: { id },
         });
         if (!assignor) {
-            throw new common_1.BadRequestException(`Assignor with ID ${id} not found`);
+            throw new common_1.NotFoundException(`Assignor with ID ${id} not found`);
         }
         return assignor;
     }
@@ -110,7 +110,7 @@ let AssignorRepository = class AssignorRepository {
             }
         }
         if (errors.length > 0) {
-            throw new common_1.BadRequestException(errors.join(', '));
+            throw new common_1.ConflictException(errors.join(', '));
         }
         const updateData = { document, email, phone, name };
         try {

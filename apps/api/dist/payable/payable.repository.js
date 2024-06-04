@@ -25,7 +25,7 @@ let PayableRepository = class PayableRepository {
             where: { id },
         });
         if (!assignor) {
-            throw new common_1.BadRequestException(`Assignor with ID ${id} not found`);
+            throw new common_1.NotFoundException(`Assignor with ID ${id} not found`);
         }
         return assignor;
     }
@@ -52,7 +52,7 @@ let PayableRepository = class PayableRepository {
             where: { id },
         });
         if (!payable) {
-            throw new common_1.BadRequestException(`Payable with ID ${id} not found`);
+            throw new common_1.NotFoundException(`Payable with ID ${id} not found`);
         }
         return payable;
     }

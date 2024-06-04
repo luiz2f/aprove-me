@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { Assignor } from '@prisma/client';
 import { AssignorRepository } from './assignor.repository';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 
 @Injectable()
 export class AssignorService {
@@ -16,10 +16,7 @@ export class AssignorService {
     try {
       return await this.assignorRepository.create(data);
     } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-      throw new BadRequestException('An unexpected error occurred');
+      throw error;
     }
   }
 
@@ -36,10 +33,7 @@ export class AssignorService {
     try {
       return await this.assignorRepository.findById(id);
     } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-      throw new BadRequestException('An unexpected error occurred');
+      throw error;
     }
   }
   async update(
@@ -49,10 +43,7 @@ export class AssignorService {
     try {
       return await this.assignorRepository.update(id, data);
     } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-      throw new BadRequestException('An unexpected error occurred');
+      throw error;
     }
   }
 

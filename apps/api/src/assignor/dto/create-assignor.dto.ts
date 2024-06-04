@@ -1,4 +1,3 @@
-// src/integrations/dtos/create-assignor.dto.ts
 import { IsNotEmpty, IsString, MaxLength, IsEmail } from 'class-validator';
 
 export class CreateAssignorDto {

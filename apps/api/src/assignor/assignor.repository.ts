@@ -1,11 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { cnpj, cpf } from 'cpf-cnpj-validator';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { isUUID } from 'class-validator';
 import { DatabaseService } from '../database/database.service';
 import { Assignor } from '@prisma/client';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 
 @Injectable()
 export class AssignorRepository {
@@ -40,7 +45,7 @@ export class AssignorRepository {
     }
 
     if (Object.keys(errors).length > 0) {
-      throw new BadRequestException(errors);
+      throw new ConflictException(errors);
     }
 
     try {
@@ -92,7 +97,7 @@ export class AssignorRepository {
     });
 
     if (!assignor) {
-      throw new BadRequestException(`Assignor with ID ${id} not found`);
+      throw new NotFoundException(`Assignor with ID ${id} not found`);
     }
 
     return assignor;
@@ -131,7 +136,7 @@ export class AssignorRepository {
     }
 
     if (errors.length > 0) {
-      throw new BadRequestException(errors.join(', '));
+      throw new ConflictException(errors.join(', '));
     }
     const updateData = { document, email, phone, name };
 

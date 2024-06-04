@@ -2,7 +2,7 @@ import { CreatePayableDto } from './dto/create-payable.dto';
 import { UpdatePayableDTO } from './dto/update-payable.dto';
 import { PayableRepository } from './payable.repository';
 import { Payable } from '@prisma/client';
-import { Pagination } from 'src/Pagination';
+import { Pagination } from '../Pagination';
 type errorType = {
     message: string;
 };
