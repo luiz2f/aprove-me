@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import AssignorTable from "./AssignorTable";
 import { Button } from "../../ui/Button";
-import CreateAssignorForm from "./CreateAssignorForm";
+import CreateAssignor from "./CreateAssignor";
 import Modal from "../../ui/Modal";
 
 const Active = styled.div`
@@ -35,7 +35,6 @@ function Assignors() {
   return (
     <Modal>
       <Padding>
-        {/* <CreateAssignorForm /> */}
         <Flex>
           <Active>Cedentes </Active>
           {/* <SearchBar>
@@ -48,7 +47,7 @@ function Assignors() {
         <AssignorTable />
       </Padding>
       <Modal.Window name="createAssignor">
-        <CreateAssignorForm />
+        <CreateAssignor />
       </Modal.Window>
     </Modal>
   );

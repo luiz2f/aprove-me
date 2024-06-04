@@ -4,7 +4,7 @@ import { Button } from "../../ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Modal from "../../ui/Modal";
-import CreatePayableForm from "./CreatePayableForm";
+import CreatePayable from "./CreatePayable";
 
 const Active = styled.div`
   color: #333;
@@ -49,7 +49,7 @@ function Payables() {
         <PayableTable />
       </Padding>
       <Modal.Window name="createPayable">
-        <CreatePayableForm />
+        <CreatePayable />
       </Modal.Window>
     </Modal>
   );

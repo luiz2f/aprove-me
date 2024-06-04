@@ -82,7 +82,6 @@ export async function createPayable(payable) {
     }
     return data;
   } catch (error) {
-    // Se for um objeto de erro conhecido, lance-o como está
     if (error.message) {
       throw new Error(error.message);
     }

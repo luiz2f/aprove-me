@@ -4,7 +4,7 @@ const StyledFormRow = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 14px 0;
+  padding: 8px 0;
 `;
 
 const Label = styled.label`

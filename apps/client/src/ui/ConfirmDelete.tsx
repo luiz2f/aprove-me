@@ -3,6 +3,7 @@ import { Button } from "./Button";
 
 const StyledModal = styled.div`
   position: fixed;
+  z-index: 2;
   top: 50%;
   left: 50%;
   border: 1px solid #eaf1fc;
@@ -43,6 +44,8 @@ function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
   function handleClick(event) {
     event.stopPropagation(); // Impede a propagação do evento de clique para elementos pai
   }
+  console.log("teste");
+
   return (
     <StyledModal onClick={handleClick}>
       <StyledConfirmDelete>

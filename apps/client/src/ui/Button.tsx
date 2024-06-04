@@ -27,6 +27,17 @@ const variations = {
       background-color: #005fff;
     }
   `,
+  primarylight: css`
+    border: 1px solid #0a36b0;
+    color: #0a36b0;
+    background-color: #fff;
+
+    &:hover {
+      background-color: #dfebff;
+      border: 1px solid #005fff;
+      color: #005fff;
+    }
+  `,
   secondary: css`
     color: #333;
     background-color: #f8fafc;
@@ -41,6 +52,17 @@ const variations = {
 
     &:hover {
       background-color: #c95454;
+    }
+  `,
+  dangerlight: css`
+    border: 1px solid #c95454;
+    color: #c95454;
+    background-color: #fff;
+
+    &:hover {
+      background-color: #ffe0e0;
+      border: 1px solid #cc2929;
+      color: #cc2929;
     }
   `,
 };

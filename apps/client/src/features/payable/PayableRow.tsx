@@ -61,8 +61,6 @@ interface PayableRowProps {
 function PayableRow({ payable }: PayableRowProps) {
   const { id: payableId, value, emissionDate } = payable;
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
-  const { id } = useParams();
   const { deletePayable, isDeleting, error } = useDeletePayable();
   const [searchParams] = useSearchParams();
 
@@ -72,15 +70,6 @@ function PayableRow({ payable }: PayableRowProps) {
     // navigate(`/recebiveis/${payableId}`);
     navigate(`/recebiveis/${payableId}?page=${page}`);
   };
-
-  useEffect(() => {
-    if (id === payableId) {
-      setModalOpen(true);
-    }
-    if (!id) {
-      setModalOpen(false);
-    }
-  }, [id, payableId]);
 
   return (
     <>

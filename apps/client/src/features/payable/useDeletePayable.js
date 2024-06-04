@@ -14,6 +14,7 @@ export function useDeletePayable() {
       queryClient.invalidateQueries({
         queryKey: ["payable"],
       });
+      console.log("test");
     },
     onError: (err) => {
       console.log(error.code);

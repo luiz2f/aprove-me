@@ -48,20 +48,12 @@ interface AssignorRowProps {
 function AssignorRow({ assignor }: AssignorRowProps) {
   const { id: assignorId, document, name, phone, email } = assignor;
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const { deleteAssignor, isDeleting, error } = useDeleteAssignor();
   const page = searchParams.get("page") || 1;
 
   const handleGoToAssignor = () => {
-    setModalOpen(true);
     navigate(`/cedentes/${assignorId}?page=${page}`);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    navigate("/cedentes");
   };
 
   return (

@@ -16,6 +16,7 @@ function PayableTable() {
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page") || 1;
   const openPayable = payables?.find((payable) => payable?.id === id);
+
   const handleModalClose = () => {
     navigate(`/recebiveis?page=${page}`);
   };

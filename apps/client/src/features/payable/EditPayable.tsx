@@ -1,40 +1,16 @@
 import styled from "styled-components";
-import toast from "react-hot-toast";
-import { useForm } from "react-hook-form";
 import { HiOutlineXMark } from "react-icons/hi2";
-import { useCreatePayable } from "./useCreatePayable";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
-import { useAssignors } from "../assignor/useAssignors";
 import { ISOtoStringDate } from "../../utils/ISOtoStringDate";
-import { Button } from "../../ui/Button";
 import { Info } from "../../ui/InfoDetails";
 import { StyledModal } from "../../ui/StyledModal";
 import { IconButton } from "../../ui/IconButton";
-import Input from "../../ui/Input";
-import StyledSelect from "../../ui/StyledSelect";
-import FormRow from "../../ui/FormRow";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { usePayable } from "./usePayable";
 import Spinner from "../../ui/Spinner";
 import { useAssignorsList } from "../assignor/useAssignorsList";
 import PayableForm from "./PayableForm";
+import { CreateEditBox } from "../../ui/CreateEdit/CreateEditBox";
 
-const StyledCreatePayable = styled.div`
-  box-shadow: 0 0 20px #00000012;
-
-  height: fit-content;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #eaf1fc;
-  padding: 48px;
-  margin: auto;
-  border-radius: 10px;
-`;
-const StyledTitleCreatePayable = styled.div`
-  font-size: 28px;
-  font-weight: 700;
-`;
 const Grid2C = styled.form`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -45,7 +21,7 @@ const Flex = styled.div`
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 `;
 
 export default function EditPayable({ openPayable, onClose }) {
@@ -59,9 +35,9 @@ export default function EditPayable({ openPayable, onClose }) {
       {isPending ? (
         <Spinner />
       ) : (
-        <StyledCreatePayable ref={ref}>
+        <CreateEditBox ref={ref}>
           <Flex>
-            <StyledTitleCreatePayable>Recebível</StyledTitleCreatePayable>
+            <h3>Recebível</h3>
             <IconButton onClick={onClose}>
               <HiOutlineXMark />
             </IconButton>
@@ -77,7 +53,7 @@ export default function EditPayable({ openPayable, onClose }) {
             openPayable={payable || openPayable || {}}
             assignorIds={assignorIds}
           />
-        </StyledCreatePayable>
+        </CreateEditBox>
       )}
     </StyledModal>
   );
