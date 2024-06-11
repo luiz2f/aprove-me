@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
     "build": "turbo run build",
     "start": "node apps/api/dist/main"
   },

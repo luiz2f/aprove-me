@@ -30,6 +30,14 @@ export class AssignorController {
     return this.assignorService.create(createAssignorDto);
   }
 
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.assignorService.findById(id);
+  }
+  @Get('list')
+  findAllIds() {
+    return this.assignorService.findAllIds();
+  }
   @Get()
   findAll(
     @Query('page', ParseIntPipe) page: number = 1,
@@ -38,15 +46,6 @@ export class AssignorController {
     const skip = (page - 1) * limit;
     const take = limit;
     return this.assignorService.findAll({ skip, take });
-  }
-  @Get('list')
-  findAllIds() {
-    return this.assignorService.findAllIds();
-  }
-
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.assignorService.findById(id);
   }
 
   @Patch(':id')

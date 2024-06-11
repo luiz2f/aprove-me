@@ -25,16 +25,16 @@ let AssignorController = class AssignorController {
     create(createAssignorDto) {
         return this.assignorService.create(createAssignorDto);
     }
-    findAll(page = 1, limit = 10) {
-        const skip = (page - 1) * limit;
-        const take = limit;
-        return this.assignorService.findAll({ skip, take });
+    findById(id) {
+        return this.assignorService.findById(id);
     }
     findAllIds() {
         return this.assignorService.findAllIds();
     }
-    findById(id) {
-        return this.assignorService.findById(id);
+    findAll(page = 1, limit = 10) {
+        const skip = (page - 1) * limit;
+        const take = limit;
+        return this.assignorService.findAll({ skip, take });
     }
     update(id, updateAssignorDto) {
         return this.assignorService.update(id, updateAssignorDto);
@@ -53,13 +53,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AssignorController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('page', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Query)('limit', common_1.ParseIntPipe)),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], AssignorController.prototype, "findAll", null);
+], AssignorController.prototype, "findById", null);
 __decorate([
     (0, common_1.Get)('list'),
     __metadata("design:type", Function),
@@ -67,12 +66,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AssignorController.prototype, "findAllIds", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('limit', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", void 0)
-], AssignorController.prototype, "findById", null);
+], AssignorController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, common_1.UsePipes)(common_1.ValidationPipe),

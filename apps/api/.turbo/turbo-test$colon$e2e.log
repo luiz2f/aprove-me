@@ -1,0 +1,12 @@
+
+> api@0.0.1 test:e2e
+> jest --config ./test/jest-e2e.json
+
+PASS test/app.e2e-spec.ts (13.973 s)
+PASS test/assignor/assignor.e2e-spec.ts (13.973 s)
+
+Test Suites: 2 passed, 2 total
+Tests:       6 todo, 2 passed, 8 total
+Snapshots:   0 total
+Time:        15.024 s
+Ran all test suites.

@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { AssignorRepository } from '../assignor.repository';
-import { AssignorService } from '../assignor.service';
-import { mockAssignor } from './assignor.mock';
+import { AssignorRepository } from './assignor.repository';
+import { AssignorService } from './assignor.service';
+import { mockAssignor } from './tests/assignor.mock';
 import {
   BadRequestException,
   ConflictException,
@@ -31,6 +31,9 @@ describe('AssignorService', () => {
     }).compile();
     assignorService = module.get(AssignorService);
     assignorRepository = module.get(AssignorRepository);
+  });
+  it('should be defined', () => {
+    expect(assignorService).toBeDefined();
   });
   describe('create assignor', () => {
     it('should successfuly create a new assignor', async () => {

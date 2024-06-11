@@ -5,14 +5,14 @@ export declare class PayableController {
     private readonly payableService;
     constructor(payableService: PayableService);
     create(createPayableDto: CreatePayableDto): Promise<{
-        message: string;
-    } | {
         id: string;
         value: number;
         emissionDate: Date;
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     findAll(page?: number, limit?: number): Promise<void | {
         data: {
@@ -26,33 +26,33 @@ export declare class PayableController {
         length: number;
     }>;
     findById(id: string): Promise<{
-        message: string;
-    } | {
         id: string;
         value: number;
         emissionDate: Date;
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     update(id: string, updatePayableDto: UpdatePayableDTO): Promise<{
-        message: string;
-    } | {
         id: string;
         value: number;
         emissionDate: Date;
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
     remove(id: string): Promise<{
-        message: string;
-    } | {
         id: string;
         value: number;
         emissionDate: Date;
         assignorId: string;
         createdAt: Date;
         updatedAt: Date;
+    } | {
+        message: string;
     }>;
 }
